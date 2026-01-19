@@ -1,5 +1,5 @@
 ## Algoritmos y la Programación Básica
-Semestre 02, 2025
+Semestre 01, 2026
 
 
 

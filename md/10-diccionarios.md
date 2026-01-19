@@ -1,5 +1,5 @@
 # Diccionarios
-Semestre 02, 2025
+Semestre 01, 2026
 
 
 
@@ -92,7 +92,7 @@ diccionario = {
     "creditos": 6
 }
 
-diccionario["catedratico"] = "Erick Marroquín"
+diccionario["catedratico"] = "Ludwing Cano"
 
 print(diccionario)
 ```
@@ -227,7 +227,7 @@ Combina dos diccionarios, agregando o actualizando llaves y valores.
 ```python
 diccionario2 = {
     "seccion": 600, 
-    "catedratico": "Erick Marroquín"
+    "catedratico": "Ludwing Cano"
 }
 
 diccionario.update(diccionario2)

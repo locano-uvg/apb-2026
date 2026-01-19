@@ -1,6 +1,6 @@
 # 📚 Presentaciones – cc2005: Algoritmos y Programación Básica
 
-Este repositorio contiene todas las presentaciones del curso **cc2005 – Algoritmos y Programación Básica**, impartido durante el **Semestre 02, 2025**.
+Este repositorio contiene todas las presentaciones del curso **cc2005 – Algoritmos y Programación Básica**, impartido durante el **Semestre 01, 2026**.
 
 Las presentaciones están organizadas por número y tema, y se encuentran en formato Reveal.js, PDF y Markdown para facilitar el acceso desde cualquier plataforma.
 
@@ -33,6 +33,6 @@ Las presentaciones están organizadas por número y tema, y se encuentran en for
 
 ## ✍️ Autor
 
-Erick Marroquín  
-[github.com/menene](https://github.com/menene)  
-🇬🇹 Guatemala, 2025
+Ludwing Cano  
+[github.com/locano](https://github.com/locano)  
+🇬🇹 Guatemala, 2026
