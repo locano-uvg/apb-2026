@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0C2C55" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Intro Python" />
     <title>cc2005 - Algoritmos y Programación Básica</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/01-intro-curso.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -24,9 +30,9 @@
                 <div class="brand">
                     <div class="brand__mark">APB</div>
                     <div class="brand__text">
-                        <p class="brand__kicker">Algoritmos y Programación Básica</p>
-                        <h1 class="brand__title">cc2005</h1>
-                        <p class="brand__sub">Semestre 01, 2026 · Universidad del Valle de Guatemala</p>
+                        <p>cc2005</p>
+                        <h1 class="brand__title">Algoritmos y Programación Básica</h1>
+                        <p class="brand__sub">Semestre 01, 2026 · Universidad del Valle de Guatemala</p>    
                     </div>
                 </div>
                 <div class="header__actions">
@@ -49,7 +55,6 @@
         </section>
 
         <main id="presentations-grid" class="presentations-grid">
-            <!-- Presentations will be rendered here by JS -->
         </main>
 
         <footer class="footer">
@@ -64,6 +69,13 @@
 
     <script src="./common/darkmode.js"></script>
     <script type="module" src="./common/main.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+            });
+        }
+    </script>
     <script>
         // Reading progress indicator
         const progressBar = document.querySelector('.progress-bar');
