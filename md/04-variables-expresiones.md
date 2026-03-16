@@ -1,136 +1,152 @@
 # Variables y Expresiones
+
 Semestre 01, 2026
 
 
 
-## Introducción
+### Agenda
+
+1. Introducción
+2. Objetivos
+3. Datos y tipos de datos
+4. Variables y asignación
+5. Reglas para nombrar variables
+6. Operadores y expresiones
+7. Ingreso de datos y comentarios
+8. Ejercicios
 
 
-Las variables y expresiones son los bloques fundamentales de cualquier programa.
+
+### Introducción
+
+Las variables y expresiones son bloques fundamentales de cualquier programa.
+Permiten almacenar información y transformarla para resolver problemas.
 
 
-Permiten almacenar datos y realizar operaciones sobre ellos para resolver problemas.
+
+### Objetivos
+
+- Comprender qué es un dato y qué es una variable.
+- Identificar los tipos de datos más usados en Python.
+- Aplicar reglas correctas de nombrado de variables.
+- Construir expresiones usando operadores aritméticos, relacionales y lógicos.
 
 
 
-## Datos
+### Datos
 
-
-Un dato es una pieza básica de información que un programa puede manipular, como números, texto o valores lógicos.
+Un dato es una unidad básica de información que un programa puede manipular.
 
 
 Ejemplos:
 
-* `42` (número entero)
-* `3.14` (número de punto flotante)
-* `"Hola Mundo"` (cadena de texto)
-* `True` (valor booleano)
+- `42` (entero)
+- `3.14` (flotante)
+- `"Hola Mundo"` (cadena)
+- `True` (booleano)
+
+
+> Cifra, letra o palabra que la computadora usa como entrada para trabajar en un programa.
+
+
+### Tipos de datos
+
+Python asigna el tipo automáticamente según el valor (tipado dinámico).
+
+
+#### Principales
+
+- `int`: números enteros, por ejemplo `42`.
+- `float`: números con decimales, por ejemplo `3.14`.
+- `str`: texto, por ejemplo `"Hola"`.
+- `bool`: valores lógicos, `True` o `False`.
+
+
+#### Verificar y convertir tipos
+
+```python
+edad = 25
+print(type(edad))
+
+numero = 3.14
+entero = int(numero)
+print(entero)  # 3
+```
 
 
 
-## Variables
+### Variables
 
+Una variable es un nombre que hace referencia a un valor guardado en memoria.
+Es una "cajita" donde almacenamos información para usarla más adelante.
 
-Es un nombre que hace referencia a un valor almacenado en memoria.
-
-
-"Cajita" donde almacenamos información
-
-
-Nos permite trabajar con datos sin conocer su valor de antemano.
-
-
-Ejemplo
-```python[]
+```python
 mensaje_inicial = "Hola Mundo!"
 ```
 
-Aquí `mensaje_inicial` es una variable que almacena el texto `"Hola Mundo!"`.
+Aquí `mensaje_inicial` guarda el texto `"Hola Mundo!"`.
 
 
-## Reglas para nombrar variables
 
-1. Deben iniciar con una letra (a-z, A-Z).
-2. Pueden contener letras, números y guiones bajos (`_`).
-3. Son sensibles a mayúsculas y minúsculas (`contador` y `Contador` son diferentes).
-4. No se pueden usar palabras reservadas de Python.
+### Asignación
+
+La asignación crea una variable o actualiza su valor.
+
+Sintaxis: `variable = valor`
+
+```python
+edad = 25
+edad = 26
+```
 
 
-❌ Ejemplo inválido:
+#### Reglas para nombrar variables
+
+1. Deben iniciar con una letra o guion bajo (`_`).
+2. Pueden contener letras, números y guiones bajos.
+3. Son sensibles a mayúsculas y minúsculas (`contador` y `Contador` son distintos).
+4. No pueden usar palabras reservadas de Python.
+5. No deben llevar espacios ni símbolos especiales.
+
+
+Ejemplo inválido:
 
 ```python
 50marimbas = "ensamble"
 ```
 
-
-✅ Ejemplo válido:
-
-```python
-nombre_completo = "Ana Pérez"
-```
-
-
-
-## Asignaciónes
-
-
-La asignación reserva un espacio en memoria y almacena un valor.
-
-
-Sintaxis: `variable = valor`
-```python[]
-edad = 25
-```
-
-Si la variable existía, se actualiza su valor, de lo contrario se reserva el espacio y se guarda el valor.
-
-
-
-## Tipos de datos
-
-
-Python no requiere declarar tipos explícitamente.
-
-
-Loosely Typed
-
-
-El tipo se asigna automáticamente según el valor.
-
-
-### Principales
-
-* **int:** números enteros (e.g., `42`)
-* **float:** números con decimales (e.g., `3.14`)
-* **str:** cadenas de texto (e.g., `"Hola"`)
-* **bool:** valores lógicos (`True` o `False`)
-
-
-### Determinar y cambiar el tipo de datos
-
-
-Ver tipo de datos de una variable
+Ejemplo válido:
 
 ```python
-type(edad)
+nombre_completo = "Ana Perez"
 ```
 
 
-Convertir tipo a otro tipo de datos
 
-```python
-numero = 3.14
-entero = int(numero)
-```
-
-Aquí `entero` tendrá el valor `3`.
+### Ejercicio : variables válidas
 
 
+Indica si cada nombre es válido o inválido en Python:
 
-## Operadores
+| Variable         | Valido o invalido |
+| ---------------- | ----------------- |
+| `_nombre`        |                   |
+| `Nombre`         |                   |
+| `La edad`        |                   |
+| `Tunombre`       |                   |
+| `Tu,direccion`   |                   |
+| `5apellido`      |                   |
+| `@perro`         |                   |
+| `Peso_persona`   |                   |
+| `genero_persona` |                   |
 
 
-### Aritméticos
+
+### Operadores
+
+
+#### Aritméticos
+
 | Operador | Descripción                 | Ejemplo  |
 | -------- | --------------------------- | -------- |
 | `+`      | Suma o concatenación        | `x + y`  |
@@ -142,7 +158,7 @@ Aquí `entero` tendrá el valor `3`.
 | `**`     | Potencia                    | `x ** y` |
 
 
-### Relacionales
+#### Relacionales
 
 | Operador | Descripción       | Ejemplo  |
 | -------- | ----------------- | -------- |
@@ -153,103 +169,104 @@ Aquí `entero` tendrá el valor `3`.
 | `>=`     | Mayor o igual que | `x >= y` |
 | `<=`     | Menor o igual que | `x <= y` |
 
-Comparan valores y devuelven un resultado booleano.
 
-
-### Lógicos
+#### Lógicos
 
 | Operador | Descripción                       | Ejemplo               |
 | -------- | --------------------------------- | --------------------- |
-| `and`    | Verdadero si ambos son True       | `(x > 0) and (y > 0)` |
-| `or`     | Verdadero si al menos uno es True | `(x > 0) or (y > 0)`  |
-| `not`    | Invierte el valor lógico          | `not(x > 0)`          |
-
-Combinar condiciones y devuelven un resultado booleano.
+| `and`    | Verdadero si ambos son `True`     | `(x > 0) and (y > 0)` |
+| `or`     | Verdadero si al menos uno es true | `(x > 0) or (y > 0)`  |
+| `not`    | Invierte el valor lógico          | `not (x > 0)`         |
 
 
 
-## Expresiones
+### Expresiones
 
+Una expresión combina datos, variables y operadores para producir un resultado.
 
-Una **expresión** es la combinación de datos, variables y operadores que produce un resultado.
-
-
-#### Ejemplo
-
-```python[]
+```python
 x = 10
 y = (2 * x) + (x / 5)
 print(y)
 ```
 
-Resultado: `25.0`
+Resultado: `24.0`
 
 
-### Orden de operaciones (PEMDASA)
-
-Python sigue la jerarquía:
+#### Orden de operaciones
 
 1. Paréntesis `()`
 2. Exponentes `**`
-3. Multiplicación y División `* / // %`
-4. Suma y Resta `+ -`
-5. De izquierda a derecha
-6. Asignación
+3. Multiplicación y división `* / // %`
+4. Suma y resta `+ -`
+5. Evaluación de izquierda a derecha
+6. Asignación `=`
 
-
-#### Ejemplo
-
-```python[]
+```python
 resultado = (5 + 3) * 2 ** 2 / 4
-print(resultado)  # Salida: 8.0
+print(resultado)  # 8.0
 ```
 
 
-### Operaciones con cadenas
+#### Operaciones con cadenas
 
+Concatenación:
 
-#### Concatenación (+)
-
-```python[]
+```python
 nombre = "Ana"
 saludo = "Hola, " + nombre
-print(saludo)  # Hola, Ana
+print(saludo)
+```
+
+Repetición:
+
+```python
+print("Hola " * 3)
 ```
 
 
-#### Repetición (*)
 
-```python[]
-print("🐍" * 3)  # 🐍🐍🐍
-```
+### Ingreso de datos
 
+Usamos `input()` para leer datos del usuario:
 
-
-## Ingreso de datos
-
-
-Usamos `input()` para interactuar con el usuario:
-
-
-```python[]
-nombre = input("¿Cuál es tu nombre? ")
+```python
+nombre = input("Cual es tu nombre? ")
 print("Hola,", nombre)
 ```
 
 
 
-## Comentarios
+### Comentarios
 
+- Ayudan a documentar el codigo.
+- Empiezan con `#`.
+- Python ignora los comentarios al ejecutar.
 
-* Los comentarios ayudan a documentar el código.
-* Empiezan con `#`.
-* No son necesarios pero si útiles.
-
-
-```python[]
-# Este programa calcula el área de un triángulo
+```python
+# Este programa calcula el area de un triangulo
 base = 5
 altura = 10
 area = (base * altura) / 2
 print(area)
+```
+
+
+
+### Ejercicio final (pseudocódigo)
+
+```text
+Algoritmo Registro
+
+Variables:
+	Entero dpi
+	Cadena nombre
+
+Inicio
+	Escribir("Bienvenido, ingrese su nombre")
+	Leer(nombre)
+	Escribir("Ingrese su DPI")
+	Leer(dpi)
+	Escribir("Hola " + nombre + ", su DPI es: " + dpi)
+Fin
 ```
