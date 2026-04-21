@@ -1,0 +1,1240 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TBL 2 — Ciclos FOR y WHILE · CC2005</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;family=Syne:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --navy: #0C2C55;
+        --blue: #296374;
+        --blue-l: #e0eaed;
+        --teal: #629FAD;
+        --teal-l: #e8f4f7;
+        --purple: #0C2C55;
+        --purp-l: #e8ecf2;
+        --coral: #1a4d5e;
+        --coral-l: #e4ecef;
+        --green: #296374;
+        --green-l: #e0eaed;
+        --red: #dc2626;
+        --red-l: #fee2e2;
+        --gold: #629FAD;
+        --gold-l: #e8f4f7;
+        --dark: #0C2C55;
+        --body: #296374;
+        --muted: #629FAD;
+        --border: #c8dde3;
+        --bg: #f5f5f5;
+        --white: #ffffff;
+        --code-bg: #051729;
+        --sidebar-w: 240px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--body);
+        line-height: 1.7;
+        font-size: 15px;
+      }
+
+      /* ── HEADER ── */
+      .site-header {
+        background: var(--navy);
+        color: white;
+        padding: 2.5rem 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .site-header::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.25);
+      }
+      .site-header::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 30%;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(13, 148, 136, 0.2);
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .header-tag {
+        display: inline-block;
+        background: var(--teal);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 12px;
+      }
+      .site-header h1 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .site-header p {
+        color: #93c5fd;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .header-alert {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #fcd34d;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        gap: 0;
+        align-items: start;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 2rem 1rem 2rem 1.5rem;
+        border-right: 1px solid var(--border);
+        background: var(--white);
+      }
+      .sidebar-title {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+        padding-left: 8px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 8px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--body);
+        text-decoration: none;
+        transition: all 0.15s;
+        margin-bottom: 2px;
+      }
+      .nav-item:hover {
+        background: var(--bg);
+        color: var(--navy);
+      }
+      .nav-item.active {
+        background: var(--blue-l);
+        color: var(--blue);
+      }
+      .nav-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        padding: 2.5rem 2.5rem 4rem;
+      }
+
+      /* ── SECTIONS ── */
+      .section {
+        margin-bottom: 3.5rem;
+        scroll-margin-top: 1rem;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border);
+      }
+      .section-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+      }
+      .section h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      .section h3 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 1.2rem 0 0.5rem;
+      }
+      .section p {
+        color: var(--body);
+        margin-bottom: 0.6rem;
+      }
+
+      /* ── CODE BLOCKS ── */
+      .code-wrap {
+        position: relative;
+        margin: 0.6rem 0 1rem;
+      }
+      .code-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        color: #475569;
+        background: #1e293b;
+        padding: 4px 10px;
+        border-radius: 0 8px 0 6px;
+        letter-spacing: 0.04em;
+      }
+      pre {
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 1.1rem 1.2rem;
+        overflow-x: auto;
+        border: 1px solid #1e293b;
+      }
+      pre code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.75;
+        color: #e2e8f0;
+      }
+      .kw {
+        color: #93c5fd;
+      } /* keywords: for while in */
+      .fn {
+        color: #6ee7b7;
+      } /* functions: print range */
+      .cm {
+        color: #475569;
+        font-style: italic;
+      } /* comments */
+      .st {
+        color: #fca5a5;
+      } /* strings */
+      .nm {
+        color: #fcd34d;
+      } /* numbers */
+      .op {
+        color: #c084fc;
+      } /* operators */
+
+      /* ── TWO COLUMN CODE ── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 0.6rem 0 1rem;
+      }
+      @media (max-width: 700px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      .col-block h4 {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      /* ── TABLE ── */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        margin: 0.6rem 0 1rem;
+      }
+      .data-table th {
+        background: var(--navy);
+        color: white;
+        padding: 9px 14px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+      }
+      .data-table th:first-child {
+        border-radius: 8px 0 0 0;
+      }
+      .data-table th:last-child {
+        border-radius: 0 8px 0 0;
+      }
+      .data-table td {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tr:nth-child(even) td {
+        background: var(--bg);
+      }
+      .data-table code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        background: var(--blue-l);
+        color: var(--blue);
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+
+      /* ── CALLOUT BOXES ── */
+      .callout {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 0.8rem 0;
+        font-size: 14px;
+      }
+      .callout-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .callout-tip {
+        background: var(--teal-l);
+        border-left: 3px solid var(--teal);
+      }
+      .callout-tip .callout-icon {
+        color: var(--teal);
+      }
+      .callout-warn {
+        background: var(--red-l);
+        border-left: 3px solid var(--red);
+      }
+      .callout-warn .callout-icon {
+        color: var(--red);
+      }
+      .callout-info {
+        background: var(--blue-l);
+        border-left: 3px solid var(--blue);
+      }
+      .callout-info .callout-icon {
+        color: var(--blue);
+      }
+      .callout-gold {
+        background: var(--gold-l);
+        border-left: 3px solid var(--gold);
+      }
+      .callout-gold .callout-icon {
+        color: var(--gold);
+      }
+      .callout b {
+        font-weight: 600;
+      }
+
+      /* ── COMPARISON TABLE ── */
+      .comp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        margin: 0.6rem 0 1rem;
+      }
+      .comp-table th {
+        padding: 10px 14px;
+        text-align: left;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+        color: white;
+      }
+      .comp-table th:first-child {
+        background: var(--dark);
+        border-radius: 8px 0 0 0;
+      }
+      .comp-table th:nth-child(2) {
+        background: var(--blue);
+      }
+      .comp-table th:nth-child(3) {
+        background: var(--purple);
+        border-radius: 0 8px 0 0;
+      }
+      .comp-table td {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .comp-table tr:last-child td {
+        border-bottom: none;
+      }
+      .comp-table tr:nth-child(even) td {
+        background: var(--bg);
+      }
+      .for-val {
+        color: var(--green);
+        font-weight: 500;
+      }
+      .while-val {
+        color: var(--purple);
+        font-weight: 500;
+      }
+      .bad-val {
+        color: var(--red);
+        font-weight: 600;
+      }
+      .good-val {
+        color: var(--green);
+        font-weight: 600;
+      }
+
+      /* ── RESOURCE CARDS ── */
+      .resource-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 0.8rem 0;
+      }
+      @media (max-width: 650px) {
+        .resource-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .resource-card {
+        display: flex;
+        gap: 12px;
+        padding: 14px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.15s;
+        align-items: flex-start;
+      }
+      .resource-card:hover {
+        border-color: var(--blue);
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+        transform: translateY(-1px);
+      }
+      .resource-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .resource-card h4 {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+        line-height: 1.3;
+        margin-bottom: 3px;
+      }
+      .resource-card p {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      .resource-card .url {
+        font-size: 11px;
+        color: var(--blue);
+        margin-top: 4px;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* ── ERROR CARD ── */
+      .error-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0.8rem 0;
+      }
+      .error-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .error-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+      .error-header span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .error-header small {
+        font-size: 12px;
+        color: var(--muted);
+        margin-left: auto;
+      }
+      .error-body {
+        padding: 0;
+      }
+      .error-body pre {
+        border-radius: 0;
+        border: none;
+        margin: 0;
+      }
+
+      /* ── FOOTER ── */
+      .site-footer {
+        background: var(--navy);
+        color: #94a3b8;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 13px;
+        margin-top: 2rem;
+      }
+      .site-footer strong {
+        color: white;
+      }
+
+      /* ── ACTIVE NAV ── */
+      .section:target .section-header {
+        animation: highlight 0.6s ease;
+      }
+      @keyframes highlight {
+        0%,
+        100% {
+          background: transparent;
+        }
+        30% {
+          background: var(--blue-l);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-tag">CC2005 · Semestre 01-2026</div>
+        <h1>TBL 2 — Ciclos FOR y WHILE</h1>
+        <p>Material de preparación · Algoritmos y Programación Básica · UVG</p>
+        <div class="header-alert">
+          ⚡ Revisa este material <strong>antes</strong> de la sesión. El iRAT
+          evaluará estos conceptos.
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <div class="sidebar-title">Contenido</div>
+        <a href="#for" class="nav-item active">
+          <span class="nav-dot" style="background: #296374">1</span> Ciclo FOR
+        </a>
+        <a href="#range" class="nav-item">
+          <span class="nav-dot" style="background: #629FAD">2</span> Función
+          range()
+        </a>
+        <a href="#while" class="nav-item">
+          <span class="nav-dot" style="background: #0C2C55">3</span> Ciclo WHILE
+        </a>
+        <a href="#nested" class="nav-item">
+          <span class="nav-dot" style="background: #1a4d5e">4</span> Ciclos
+          anidados
+        </a>
+        <a href="#errors" class="nav-item">
+          <span class="nav-dot" style="background: #dc2626">5</span> Errores
+          comunes
+        </a>
+        <a href="#vs" class="nav-item">
+          <span class="nav-dot" style="background: #296374">6</span> FOR vs
+          WHILE
+        </a>
+        <a href="#recursos" class="nav-item">
+          <span class="nav-dot" style="background: #629FAD">7</span> Recursos y
+          videos
+        </a>
+      </nav>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- ══ 1. CICLO FOR ══ -->
+        <section class="section" id="for">
+          <div class="section-header">
+            <div class="section-num" style="background: #296374">1</div>
+            <h2>Ciclo FOR</h2>
+          </div>
+          <p>
+            El ciclo <strong>for</strong> repite un bloque de código un número
+            <strong>definido</strong> de veces. En Python se usa para recorrer
+            secuencias: listas, cadenas o rangos numéricos.
+          </p>
+
+          <h3>Sintaxis</h3>
+          <div class="code-wrap">
+            <span class="code-label">python</span>
+            <pre><code><span class="kw">for</span> variable <span class="kw">in</span> secuencia:
+    <span class="cm"># instrucciones (indentadas con 4 espacios)</span>
+    <span class="cm"># se repiten por cada elemento de la secuencia</span></code></pre>
+          </div>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #296374">Recorrer un rango numérico</h4>
+              <pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):
+    <span class="fn">print</span>(i)
+
+<span class="cm"># Imprime: 0 1 2 3 4</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">Acumular valores</h4>
+              <pre><code>suma <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    suma <span class="op">+=</span> i
+<span class="fn">print</span>(suma)  <span class="cm"># 15</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">Recorrer una cadena</h4>
+              <pre><code><span class="kw">for</span> letra <span class="kw">in</span> <span class="st">"hola"</span>:
+    <span class="fn">print</span>(letra)
+
+<span class="cm"># Imprime: h  o  l  a</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">Calcular factorial</h4>
+              <pre><code>fact <span class="op">=</span> <span class="nm">1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    fact <span class="op">*=</span> i
+<span class="fn">print</span>(fact)  <span class="cm"># 120</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              La variable del <strong>for</strong> (i, j, x, letra…) toma
+              automáticamente cada valor de la secuencia. No necesitas
+              actualizarla manualmente.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 2. RANGE() ══ -->
+        <section class="section" id="range">
+          <div class="section-header">
+            <div class="section-num" style="background: #629FAD">2</div>
+            <h2>La función range()</h2>
+          </div>
+          <p>
+            La función <strong>range()</strong> genera una secuencia de números
+            enteros. Puede recibir 1, 2 o 3 argumentos. El
+            <strong>límite superior nunca se incluye</strong>.
+          </p>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Forma</th>
+                <th>Genera</th>
+                <th>Ejemplo</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>range(fin)</code></td>
+                <td>Del 0 hasta fin − 1</td>
+                <td><code>range(5)</code></td>
+                <td>0, 1, 2, 3, 4</td>
+              </tr>
+              <tr>
+                <td><code>range(inicio, fin)</code></td>
+                <td>Del inicio hasta fin − 1</td>
+                <td><code>range(2, 6)</code></td>
+                <td>2, 3, 4, 5</td>
+              </tr>
+              <tr>
+                <td><code>range(inicio, fin, paso)</code></td>
+                <td>Saltos de 'paso'</td>
+                <td><code>range(0, 10, 3)</code></td>
+                <td>0, 3, 6, 9</td>
+              </tr>
+              <tr>
+                <td><code>range(inicio, fin, -n)</code></td>
+                <td>Cuenta regresiva</td>
+                <td><code>range(5, 0, -1)</code></td>
+                <td>5, 4, 3, 2, 1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #629FAD">Paso positivo (ascendente)</h4>
+              <pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">2</span>):
+    <span class="fn">print</span>(i)
+<span class="cm"># 0  2  4  6  8</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #629FAD">Paso negativo (descendente)</h4>
+              <pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>, <span class="nm">0</span>, <span class="op">-</span><span class="nm">2</span>):
+    <span class="fn">print</span>(i)
+<span class="cm"># 10  8  6  4  2</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div>
+              <b>Si el paso es 0</b>, Python lanza un <code>ValueError</code>.
+              Para contar hacia atrás, el inicio debe ser mayor que el fin y el
+              paso debe ser negativo.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 3. WHILE ══ -->
+        <section class="section" id="while">
+          <div class="section-header">
+            <div class="section-num" style="background: #0C2C55">3</div>
+            <h2>Ciclo WHILE</h2>
+          </div>
+          <p>
+            El ciclo <strong>while</strong> repite un bloque de código
+            <strong>mientras</strong> una condición sea verdadera. A diferencia
+            del <em>for</em>, no itera sobre una secuencia: repite hasta que la
+            condición cambie.
+          </p>
+
+          <h3>Sintaxis</h3>
+          <div class="code-wrap">
+            <pre><code><span class="kw">while</span> condicion:
+    <span class="cm"># instrucciones</span>
+    <span class="cm"># IMPORTANTE: algo dentro debe cambiar la condición</span>
+    <span class="cm"># para que eventualmente sea False</span></code></pre>
+          </div>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Contador básico</h4>
+              <pre><code>i <span class="op">=</span> <span class="nm">1</span>
+<span class="kw">while</span> i <span class="op">&lt;=</span> <span class="nm">5</span>:
+    <span class="fn">print</span>(i)
+    i <span class="op">+=</span> <span class="nm">1</span>  <span class="cm"># actualizar</span>
+
+<span class="cm"># Imprime: 1 2 3 4 5</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Suma acumulada</h4>
+              <pre><code>total <span class="op">=</span> <span class="nm">0</span>
+num <span class="op">=</span> <span class="nm">1</span>
+<span class="kw">while</span> num <span class="op">&lt;=</span> <span class="nm">10</span>:
+    total <span class="op">+=</span> num
+    num <span class="op">+=</span> <span class="nm">1</span>
+<span class="fn">print</span>(total)  <span class="cm"># 55</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">División sucesiva</h4>
+              <pre><code>n <span class="op">=</span> <span class="nm">100</span>
+<span class="kw">while</span> n <span class="op">&gt;</span> <span class="nm">1</span>:
+    n <span class="op">//=</span> <span class="nm">2</span>
+    <span class="fn">print</span>(n)
+
+<span class="cm"># 50  25  12  6  3  1</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Con break</h4>
+              <pre><code>i <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">while True</span>:
+    <span class="kw">if</span> i <span class="op">&gt;=</span> <span class="nm">3</span>:
+        <span class="kw">break</span>
+    <span class="fn">print</span>(i)
+    i <span class="op">+=</span> <span class="nm">1</span>
+<span class="cm"># 0  1  2</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div>
+              <b>Ciclo infinito:</b> si no actualizas la variable de la
+              condición dentro del <em>while</em>, el ciclo nunca termina. En
+              Python puedes detenerlo con <strong>Ctrl + C</strong>.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 4. ANIDADOS ══ -->
+        <section class="section" id="nested">
+          <div class="section-header">
+            <div class="section-num" style="background: #1a4d5e">4</div>
+            <h2>Ciclos anidados</h2>
+          </div>
+          <p>
+            Un ciclo anidado es un ciclo <strong>dentro</strong> de otro. Por
+            cada iteración del ciclo externo, el ciclo interno se ejecuta
+            <strong>completo</strong>.
+          </p>
+
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Estructura básica</h4>
+              <pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">3</span>):      <span class="cm"># externo</span>
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">2</span>):  <span class="cm"># interno</span>
+        <span class="fn">print</span>(i, j)
+
+<span class="cm"># (0,0) (0,1)</span>
+<span class="cm"># (1,0) (1,1)</span>
+<span class="cm"># (2,0) (2,1)</span>
+<span class="cm"># Total: 3 × 2 = 6 prints</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Triángulo de asteriscos</h4>
+              <pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">5</span>):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i):
+        <span class="fn">print</span>(<span class="st">"*"</span>, end<span class="op">=</span><span class="st">""</span>)
+    <span class="fn">print</span>()
+
+<span class="cm"># *</span>
+<span class="cm"># **</span>
+<span class="cm"># ***</span>
+<span class="cm"># ****</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              El número total de ejecuciones del cuerpo interior es el
+              <b>producto</b> de las iteraciones de cada ciclo. Ejemplo:
+              <code>range(4) × range(3) = 12</code> ejecuciones.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 5. ERRORES ══ -->
+        <section class="section" id="errors">
+          <div class="section-header">
+            <div class="section-num" style="background: #dc2626">5</div>
+            <h2>Errores comunes</h2>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Ciclo infinito en while</span>
+              <small>Olvidar actualizar la variable de la condición</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ Ciclo infinito — x nunca cambia</span>
+x <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">while</span> x <span class="op">&lt;</span> <span class="nm">5</span>:
+    <span class="fn">print</span>(x)        <span class="cm"># se ejecuta infinitamente</span>
+
+<span class="cm"># ✅ Correcto</span>
+x <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">while</span> x <span class="op">&lt;</span> <span class="nm">5</span>:
+    <span class="fn">print</span>(x)
+    x <span class="op">+=</span> <span class="nm">1</span>          <span class="cm"># actualizar aquí</span></code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>range() no incluye el límite superior</span>
+              <small>range(1, 10) genera del 1 al 9, no incluye el 10</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ Suma solo hasta 9 → resultado: 45</span>
+suma <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">10</span>):
+    suma <span class="op">+=</span> i
+
+<span class="cm"># ✅ Suma hasta 10 → resultado: 55</span>
+suma <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">11</span>):  <span class="cm"># 11 para incluir el 10</span>
+    suma <span class="op">+=</span> i</code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Acumulador inicializado en 0 para multiplicar</span>
+              <small>Inicializar en 0 con *= siempre da 0</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ Siempre imprime 0</span>
+prod <span class="op">=</span> <span class="nm">0</span>          <span class="cm"># error: inicializar en 0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    prod <span class="op">*=</span> i
+
+<span class="cm"># ✅ Correcto → 120</span>
+prod <span class="op">=</span> <span class="nm">1</span>          <span class="cm"># neutro multiplicativo = 1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>):
+    prod <span class="op">*=</span> i</code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Paso negativo sin invertir inicio y fin</span>
+              <small>Para descender, inicio debe ser mayor que fin</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ No genera nada (rango vacío)</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">10</span>, <span class="op">-</span><span class="nm">1</span>):
+    <span class="fn">print</span>(i)
+
+<span class="cm"># ✅ Cuenta regresiva del 10 al 1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>, <span class="nm">0</span>, <span class="op">-</span><span class="nm">1</span>):
+    <span class="fn">print</span>(i)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 6. FOR vs WHILE ══ -->
+        <section class="section" id="vs">
+          <div class="section-header">
+            <div class="section-num" style="background: #296374">6</div>
+            <h2>FOR vs WHILE — ¿cuándo usar cada uno?</h2>
+          </div>
+
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Criterio</th>
+                <th>Ciclo FOR</th>
+                <th>Ciclo WHILE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Número de iteraciones</td>
+                <td class="for-val">Conocido de antemano</td>
+                <td class="while-val">Puede no conocerse</td>
+              </tr>
+              <tr>
+                <td>Condición de parada</td>
+                <td class="for-val">Se agota la secuencia</td>
+                <td class="while-val">Condición booleana</td>
+              </tr>
+              <tr>
+                <td>Actualización de variable</td>
+                <td class="good-val">Automática (Python la hace)</td>
+                <td class="bad-val">Manual (debes hacerlo tú)</td>
+              </tr>
+              <tr>
+                <td>Riesgo de ciclo infinito</td>
+                <td class="good-val">No</td>
+                <td class="bad-val">Sí, si olvidas actualizar</td>
+              </tr>
+              <tr>
+                <td>Caso típico</td>
+                <td class="for-val">Listas, tablas, rangos fijos</td>
+                <td class="while-val">
+                  Leer hasta condición, juegos, reintentos
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              <b>Regla práctica:</b> si puedes escribir el número de iteraciones
+              <em>antes</em> de correr el programa, usa <strong>for</strong>. Si
+              dependes de que algo cambie durante la ejecución, usa
+              <strong>while</strong>.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 7. RECURSOS ══ -->
+        <section class="section" id="recursos">
+          <div class="section-header">
+            <div class="section-num" style="background: #629FAD">7</div>
+            <h2>Recursos de estudio recomendados</h2>
+          </div>
+          <p>
+            Revisa estos recursos en el orden que prefieras. Se recomienda
+            empezar por los videos antes de la lectura.
+          </p>
+
+          <h3>📹 Videos en YouTube</h3>
+          <div class="resource-grid">
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=r0D2PRdkJpc"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fee2e2">▶️</div>
+              <div>
+                <h4>Ciclo FOR en Python</h4>
+                <p>
+                  PrograLabs — ciclo for explicado en español con ejemplos
+                  claros.
+                </p>
+                <div class="url">youtube.com · PrograLabs</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=fJEqx_1axUg"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #ede9fe">▶️</div>
+              <div>
+                <h4>Ciclo WHILE en Python</h4>
+                <p>
+                  PrograLabs — ciclo while con ejemplos y casos de ciclo
+                  infinito.
+                </p>
+                <div class="url">youtube.com · PrograLabs</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=FrXtyg9WBSU"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fff7ed">▶️</div>
+              <div>
+                <h4>Ciclos anidados en Python</h4>
+                <p>
+                  PrograLabs — ciclos dentro de ciclos con ejemplos paso a paso.
+                </p>
+                <div class="url">youtube.com · PrograLabs</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=4DCgVLnBO3Y"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #dcfce7">▶️</div>
+              <div>
+                <h4>Función range() en Python</h4>
+                <p>
+                  Koolac — los 3 parámetros de range() explicados en español.
+                </p>
+                <div class="url">youtube.com · Koolac</div>
+              </div>
+            </a>
+          </div>
+
+          <h3>📖 Lectura y documentación</h3>
+          <div class="resource-grid">
+            <a
+              class="resource-card"
+              href="https://www.geeksforgeeks.org/python/loops-in-python/"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #dcfce7">📗</div>
+              <div>
+                <h4>Loops en Python — GeeksForGeeks</h4>
+                <p>
+                  Explicación completa de for y while con ejemplos interactivos.
+                </p>
+                <div class="url">geeksforgeeks.org</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.geeksforgeeks.org/python-while-loop/"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #ede9fe">📘</div>
+              <div>
+                <h4>Ciclo while — GeeksForGeeks</h4>
+                <p>Profundiza en while, break, continue y casos de uso.</p>
+                <div class="url">geeksforgeeks.org</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://docs.python.org/3/tutorial/controlflow.html"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #eff6ff">📙</div>
+              <div>
+                <h4>Control de flujo — Python oficial</h4>
+                <p>
+                  Tutorial oficial de Python sobre for, while y estructuras de
+                  control.
+                </p>
+                <div class="url">docs.python.org</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.w3schools.com/python/python_for_loops.asp"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fef9c3">📒</div>
+              <div>
+                <h4>Ciclos — W3Schools</h4>
+                <p>
+                  Recurso interactivo con editor en línea para practicar en el
+                  navegador.
+                </p>
+                <div class="url">w3schools.com</div>
+              </div>
+            </a>
+          </div>
+
+          <h3>💻 Práctica en línea</h3>
+          <div class="resource-grid">
+            <a
+              class="resource-card"
+              href="https://pythontutor.com"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #e6f5f3">🐍</div>
+              <div>
+                <h4>Python Tutor</h4>
+                <p>
+                  Visualiza cómo cambian las variables en cada iteración paso a
+                  paso. <strong>Muy recomendado</strong> para entender ciclos.
+                </p>
+                <div class="url">pythontutor.com</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.w3schools.com/python/exercise.asp?filename=exercise_for_loops1"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fff7ed">✏️</div>
+              <div>
+                <h4>Ejercicios interactivos — W3Schools</h4>
+                <p>
+                  Ejercicios con corrección automática para practicar for y
+                  while.
+                </p>
+                <div class="url">w3schools.com</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="callout callout-gold">
+            <span class="callout-icon">⭐</span>
+            <div>
+              <b>Recomendación:</b> copia los ejemplos de esta página en
+              <a
+                href="https://pythontutor.com"
+                target="_blank"
+                style="color: var(--gold)"
+                >Python Tutor</a
+              >
+              y ejecútalos paso a paso. Ver las variables cambiar visualmente es
+              la forma más rápida de entender los ciclos.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <strong>CC2005 — Algoritmos y Programación Básica</strong> · Universidad
+      del Valle de Guatemala · Semestre 01-2026
+    </footer>
+
+    <script>
+      // Active nav highlight on scroll
+      const sections = document.querySelectorAll(".section");
+      const navItems = document.querySelectorAll(".nav-item");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              navItems.forEach((n) => n.classList.remove("active"));
+              const active = document.querySelector(
+                `.nav-item[href="#${e.target.id}"]`,
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.3 },
+      );
+      sections.forEach((s) => observer.observe(s));
+    </script>
+  </body>
+</html>

@@ -89,11 +89,9 @@ export const presentations = [
     image: "./assets/06-estructuras-repeticion.png",
     links: {
       ver: "./presentations/06-estructuras-repeticion.html",
-      pdf: "./pdf/06-estructuras-repeticion.pdf",
-      md: "./md/06-estructuras-repeticion.md",
-      ejemplos: REPO_TREE("03 - Estructuras de repeticion"),
+      ejemplos: "./presentations/06-ejemplos-repeticiones.html",
     },
-    active: false,
+    active: true,
   },
   {
     id: 5,
@@ -105,7 +103,7 @@ export const presentations = [
       md: "./md/05-estructuras-condicionales.md",
       ejemplos: REPO_TREE("02 - Estructuras Condicionales"),
     },
-    active: false,
+    active: true,
   },
   {
     id: 4,
