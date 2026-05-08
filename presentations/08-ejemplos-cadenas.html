@@ -1,0 +1,1331 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TBL — Cadenas · CC2005</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --navy: #0c2c55;
+        --blue: #296374;
+        --blue-l: #e0eaed;
+        --teal: #629fad;
+        --teal-l: #e8f4f7;
+        --purple: #0c2c55;
+        --purp-l: #e8ecf2;
+        --coral: #1a4d5e;
+        --coral-l: #e4ecef;
+        --green: #296374;
+        --green-l: #e0eaed;
+        --red: #dc2626;
+        --red-l: #fee2e2;
+        --gold: #629fad;
+        --gold-l: #e8f4f7;
+        --dark: #0c2c55;
+        --body: #296374;
+        --muted: #629fad;
+        --border: #c8dde3;
+        --bg: #f5f5f5;
+        --white: #ffffff;
+        --code-bg: #051729;
+        --sidebar-w: 240px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--body);
+        line-height: 1.7;
+        font-size: 15px;
+      }
+
+      /* ── HEADER ── */
+      .site-header {
+        background: var(--navy);
+        color: white;
+        padding: 2.5rem 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .site-header::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.25);
+      }
+      .site-header::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 30%;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(13, 148, 136, 0.2);
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .header-tag {
+        display: inline-block;
+        background: var(--teal);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 12px;
+      }
+      .site-header h1 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .site-header p {
+        color: #93c5fd;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .header-alert {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #fcd34d;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        gap: 0;
+        align-items: start;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 2rem 1rem 2rem 1.5rem;
+        border-right: 1px solid var(--border);
+        background: var(--white);
+      }
+      .sidebar-title {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+        padding-left: 8px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 8px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--body);
+        text-decoration: none;
+        transition: all 0.15s;
+        margin-bottom: 2px;
+      }
+      .nav-item:hover {
+        background: var(--bg);
+        color: var(--navy);
+      }
+      .nav-item.active {
+        background: var(--blue-l);
+        color: var(--blue);
+      }
+      .nav-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        padding: 2.5rem 2.5rem 4rem;
+      }
+
+      /* ── SECTIONS ── */
+      .section {
+        margin-bottom: 3.5rem;
+        scroll-margin-top: 1rem;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border);
+      }
+      .section-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+      }
+      .section h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      .section h3 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 1.2rem 0 0.5rem;
+      }
+      .section p {
+        color: var(--body);
+        margin-bottom: 0.6rem;
+      }
+
+      /* ── CODE ── */
+      .code-wrap {
+        position: relative;
+        margin: 0.6rem 0 1rem;
+      }
+      .code-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        color: #475569;
+        background: #1e293b;
+        padding: 4px 10px;
+        border-radius: 0 8px 0 6px;
+        letter-spacing: 0.04em;
+      }
+      pre {
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 1.1rem 1.2rem;
+        overflow-x: auto;
+        border: 1px solid #1e293b;
+      }
+      pre code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.75;
+        color: #e2e8f0;
+      }
+      .kw {
+        color: #93c5fd;
+      }
+      .fn {
+        color: #6ee7b7;
+      }
+      .cm {
+        color: #475569;
+        font-style: italic;
+      }
+      .st {
+        color: #fca5a5;
+      }
+      .nm {
+        color: #fcd34d;
+      }
+      .op {
+        color: #c084fc;
+      }
+      .at {
+        color: #6ee7b7;
+      }
+
+      /* ── TWO COL ── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 0.6rem 0 1rem;
+      }
+      @media (max-width: 700px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      .col-block h4 {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      /* ── TABLE ── */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        margin: 0.6rem 0 1rem;
+      }
+      .data-table th {
+        background: var(--navy);
+        color: white;
+        padding: 9px 14px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+      }
+      .data-table th:first-child {
+        border-radius: 8px 0 0 0;
+      }
+      .data-table th:last-child {
+        border-radius: 0 8px 0 0;
+      }
+      .data-table td {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tr:nth-child(even) td {
+        background: var(--bg);
+      }
+      .data-table code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        background: var(--blue-l);
+        color: var(--blue);
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+
+      /* ── CALLOUT ── */
+      .callout {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 0.8rem 0;
+        font-size: 14px;
+      }
+      .callout-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .callout-tip {
+        background: var(--teal-l);
+        border-left: 3px solid var(--teal);
+      }
+      .callout-tip .callout-icon {
+        color: var(--teal);
+      }
+      .callout-warn {
+        background: var(--red-l);
+        border-left: 3px solid var(--red);
+      }
+      .callout-warn .callout-icon {
+        color: var(--red);
+      }
+      .callout-info {
+        background: var(--blue-l);
+        border-left: 3px solid var(--blue);
+      }
+      .callout-info .callout-icon {
+        color: var(--blue);
+      }
+      .callout-gold {
+        background: var(--gold-l);
+        border-left: 3px solid var(--gold);
+      }
+      .callout-gold .callout-icon {
+        color: var(--gold);
+      }
+      .callout b {
+        font-weight: 600;
+      }
+
+      /* ── ERROR CARD ── */
+      .error-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0.8rem 0;
+      }
+      .error-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .error-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+      .error-header span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .error-header small {
+        font-size: 12px;
+        color: var(--muted);
+        margin-left: auto;
+      }
+      .error-body {
+        padding: 0;
+      }
+      .error-body pre {
+        border-radius: 0;
+        border: none;
+        margin: 0;
+      }
+
+      /* ── RESOURCE CARDS ── */
+      .resource-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 0.8rem 0;
+      }
+      @media (max-width: 650px) {
+        .resource-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .resource-card {
+        display: flex;
+        gap: 12px;
+        padding: 14px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.15s;
+        align-items: flex-start;
+      }
+      .resource-card:hover {
+        border-color: var(--blue);
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+        transform: translateY(-1px);
+      }
+      .resource-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .resource-card h4 {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+        line-height: 1.3;
+        margin-bottom: 3px;
+      }
+      .resource-card p {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      .resource-card .url {
+        font-size: 11px;
+        color: var(--blue);
+        margin-top: 4px;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* ── FOOTER ── */
+      .site-footer {
+        background: var(--navy);
+        color: #94a3b8;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 13px;
+        margin-top: 2rem;
+      }
+      .site-footer strong {
+        color: white;
+      }
+
+      /* ── NAV HIGHLIGHT ── */
+      .section:target .section-header {
+        animation: highlight 0.6s ease;
+      }
+      @keyframes highlight {
+        0%,
+        100% {
+          background: transparent;
+        }
+        30% {
+          background: var(--blue-l);
+        }
+      }
+
+      /* ── INDEX DIAGRAM ── */
+      .index-diagram {
+        background: var(--code-bg);
+        border-radius: 10px;
+        border: 1px solid #1e293b;
+        padding: 1.1rem 1.2rem;
+        overflow-x: auto;
+        margin: 0.6rem 0 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 2.2;
+      }
+      .idx-char {
+        color: #fca5a5;
+      }
+      .idx-pos {
+        color: #fcd34d;
+      }
+      .idx-neg {
+        color: #c084fc;
+      }
+      .idx-sep {
+        color: #475569;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-tag">CC2005 · Semestre 01-2026</div>
+        <h1>Cadenas (Strings) en Python</h1>
+        <p>Material de estudio · Algoritmos y Programación Básica · UVG</p>
+        <div class="header-alert">
+          ⚡ Revisa este material <strong>antes</strong> de la sesión. El iRAT
+          evaluará estos conceptos.
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <div class="sidebar-title">Contenido</div>
+        <a href="#definicion" class="nav-item active">
+          <span class="nav-dot" style="background: #296374">1</span> Definición
+        </a>
+        <a href="#metodos" class="nav-item">
+          <span class="nav-dot" style="background: #629fad">2</span> Métodos
+        </a>
+        <a href="#indices" class="nav-item">
+          <span class="nav-dot" style="background: #0c2c55">3</span> Índices
+        </a>
+        <a href="#recorrer" class="nav-item">
+          <span class="nav-dot" style="background: #1a4d5e">4</span> Recorrer
+          cadenas
+        </a>
+        <a href="#errores" class="nav-item">
+          <span class="nav-dot" style="background: #dc2626">5</span> Errores
+          comunes
+        </a>
+        <a href="#recursos" class="nav-item">
+          <span class="nav-dot" style="background: #629fad">6</span> Recursos y
+          videos
+        </a>
+      </nav>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- ══ 1. DEFINICIÓN ══ -->
+        <section class="section" id="definicion">
+          <div class="section-header">
+            <div class="section-num" style="background: #296374">1</div>
+            <h2>Definición y concatenación</h2>
+          </div>
+          <p>
+            Una <strong>cadena</strong> es una secuencia de caracteres (letras,
+            números, símbolos y espacios) encerrada entre comillas simples
+            <code
+              style="
+                background: var(--blue-l);
+                color: var(--blue);
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+              "
+              >''</code
+            >
+            o dobles
+            <code
+              style="
+                background: var(--blue-l);
+                color: var(--blue);
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+              "
+              >""</code
+            >. Las cadenas son <strong>inmutables</strong>: una vez creadas, no
+            se puede modificar ninguno de sus caracteres directamente.
+          </p>
+
+          <div class="callout callout-info">
+            <span class="callout-icon">🔒</span>
+            <div>
+              <b>Inmutabilidad:</b> al concatenar dos cadenas no se modifica
+              ninguna de las originales — se crea una cadena nueva. Para
+              "modificar" una cadena debes reasignar la variable.
+            </div>
+          </div>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #296374">Concatenación con +</h4>
+              <pre><code>cadena1 <span class="op">=</span> <span class="st">"Hola"</span>
+cadena2 <span class="op">=</span> <span class="st">"Mundo"</span>
+cadena3 <span class="op">=</span> cadena1 <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> cadena2
+
+<span class="fn">print</span>(cadena1)  <span class="cm"># Hola</span>
+<span class="fn">print</span>(cadena2)  <span class="cm"># Mundo</span>
+<span class="fn">print</span>(cadena3)  <span class="cm"># Hola Mundo</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">Repetición con *</h4>
+              <pre><code>linea <span class="op">=</span> <span class="st">"-"</span> <span class="op">*</span> <span class="nm">10</span>
+<span class="fn">print</span>(linea)  <span class="cm"># ----------</span>
+
+saludo <span class="op">=</span> <span class="st">"Hola "</span> <span class="op">*</span> <span class="nm">3</span>
+<span class="fn">print</span>(saludo)
+<span class="cm"># Hola Hola Hola </span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">f-strings (formato moderno)</h4>
+              <pre><code>nombre <span class="op">=</span> <span class="st">"Ana"</span>
+edad <span class="op">=</span> <span class="nm">20</span>
+msg <span class="op">=</span> <span class="st">f"Me llamo {nombre} y tengo {edad} años"</span>
+<span class="fn">print</span>(msg)
+<span class="cm"># Me llamo Ana y tengo 20 años</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">Cadena multilínea</h4>
+              <pre><code>texto <span class="op">=</span> <span class="st">"""Primera línea
+Segunda línea
+Tercera línea"""</span>
+<span class="fn">print</span>(texto)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 2. MÉTODOS ══ -->
+        <section class="section" id="metodos">
+          <div class="section-header">
+            <div class="section-num" style="background: #629fad">2</div>
+            <h2>Métodos de cadenas</h2>
+          </div>
+          <p>
+            Las cadenas son <strong>objetos</strong> en Python, por lo que
+            tienen métodos integrados que se invocan con la notación de punto
+            (<code
+              style="
+                background: var(--blue-l);
+                color: var(--blue);
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+              "
+              >cadena.metodo()</code
+            >). La referencia completa está en
+            <a
+              href="https://docs.python.org/3/library/stdtypes.html#string-methods"
+              target="_blank"
+              style="color: var(--blue)"
+              >docs.python.org</a
+            >.
+          </p>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Método</th>
+                <th>¿Qué hace?</th>
+                <th>Ejemplo</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>len(cadena)</code></td>
+                <td>Largo (número de caracteres)</td>
+                <td><code>len("Hola")</code></td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><code>.isalpha()</code></td>
+                <td>¿Solo letras? (sin espacios ni números)</td>
+                <td><code>"HolaMundo".isalpha()</code></td>
+                <td>True</td>
+              </tr>
+              <tr>
+                <td><code>.isdigit()</code></td>
+                <td>¿Solo dígitos?</td>
+                <td><code>"12345".isdigit()</code></td>
+                <td>True</td>
+              </tr>
+              <tr>
+                <td><code>.upper()</code></td>
+                <td>Convierte a mayúsculas</td>
+                <td><code>"hola".upper()</code></td>
+                <td>"HOLA"</td>
+              </tr>
+              <tr>
+                <td><code>.lower()</code></td>
+                <td>Convierte a minúsculas</td>
+                <td><code>"HOLA".lower()</code></td>
+                <td>"hola"</td>
+              </tr>
+              <tr>
+                <td><code>.title()</code></td>
+                <td>Primera letra de cada palabra en mayúscula</td>
+                <td><code>"hola mundo".title()</code></td>
+                <td>"Hola Mundo"</td>
+              </tr>
+              <tr>
+                <td><code>.count(sub)</code></td>
+                <td>Cuenta cuántas veces aparece una subcadena</td>
+                <td><code>"banana".count("a")</code></td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td><code>.replace(old, new)</code></td>
+                <td>Reemplaza todas las ocurrencias</td>
+                <td><code>"Hola Mundo".replace("Mundo","Python")</code></td>
+                <td>"Hola Python"</td>
+              </tr>
+              <tr>
+                <td><code>.find(sub)</code></td>
+                <td>Índice de la primera aparición (−1 si no existe)</td>
+                <td><code>"Hola Mundo".find("M")</code></td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td><code>.rfind(sub)</code></td>
+                <td>Índice de la última aparición</td>
+                <td><code>"Hola Hola".rfind("H")</code></td>
+                <td>5</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Métodos de inspección</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #629fad">len(), isalpha(), isdigit()</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+<span class="fn">print</span>(<span class="fn">len</span>(cadena))           <span class="cm"># 10</span>
+<span class="fn">print</span>(<span class="st">"HolaMundo"</span><span class="at">.isalpha</span>())  <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="st">"Hola Mundo"</span><span class="at">.isalpha</span>()) <span class="cm"># False</span>
+<span class="fn">print</span>(<span class="st">"12345"</span><span class="at">.isdigit</span>())      <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="st">"123a"</span><span class="at">.isdigit</span>())       <span class="cm"># False</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #629fad">upper(), lower(), title()</h4>
+              <pre><code>s <span class="op">=</span> <span class="st">"hola mundo desde python"</span>
+
+<span class="fn">print</span>(s<span class="at">.upper</span>())
+<span class="cm"># HOLA MUNDO DESDE PYTHON</span>
+
+<span class="fn">print</span>(s<span class="at">.lower</span>())
+<span class="cm"># hola mundo desde python</span>
+
+<span class="fn">print</span>(s<span class="at">.title</span>())
+<span class="cm"># Hola Mundo Desde Python</span></code></pre>
+            </div>
+          </div>
+
+          <h3>Búsqueda y reemplazo</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #629fad">count() y replace()</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+<span class="fn">print</span>(cadena<span class="at">.count</span>(<span class="st">"o"</span>))  <span class="cm"># 2</span>
+<span class="fn">print</span>(cadena<span class="at">.count</span>(<span class="st">"M"</span>))  <span class="cm"># 1</span>
+
+nueva <span class="op">=</span> cadena<span class="at">.replace</span>(<span class="st">"Mundo"</span>, <span class="st">"Python"</span>)
+<span class="fn">print</span>(nueva)   <span class="cm"># Hola Python</span>
+<span class="fn">print</span>(cadena)  <span class="cm"># Hola Mundo (sin cambio)</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #629fad">find() y rfind()</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Hola Mundo"</span>
+
+<span class="fn">print</span>(cadena<span class="at">.find</span>(<span class="st">"Hola"</span>))   <span class="cm"># 0</span>
+<span class="fn">print</span>(cadena<span class="at">.rfind</span>(<span class="st">"Hola"</span>))  <span class="cm"># 5</span>
+<span class="fn">print</span>(cadena<span class="at">.find</span>(<span class="st">"z"</span>))      <span class="cm"># -1 (no existe)</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              Los métodos de cadena <strong>no modifican</strong> la cadena
+              original — retornan una cadena nueva. Siempre guarda el resultado:
+              <code
+                style="
+                  background: var(--blue-l);
+                  color: var(--blue);
+                  padding: 1px 5px;
+                  border-radius: 4px;
+                  font-family: &quot;JetBrains Mono&quot;, monospace;
+                "
+                >nueva = cadena.upper()</code
+              >.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 3. ÍNDICES ══ -->
+        <section class="section" id="indices">
+          <div class="section-header">
+            <div class="section-num" style="background: #0c2c55">3</div>
+            <h2>Índices</h2>
+          </div>
+          <p>
+            Cada carácter de una cadena tiene una
+            <strong>posición (índice)</strong>. Los índices siempre inician en
+            <strong>0</strong>. También existen índices
+            <strong>negativos</strong> que cuentan desde el final hacia el
+            inicio.
+          </p>
+
+          <div class="index-diagram">
+            <span class="idx-sep">Cadena: </span
+            ><span class="idx-char"> H </span><span class="idx-sep">|</span
+            ><span class="idx-char"> o </span><span class="idx-sep">|</span
+            ><span class="idx-char"> l </span><span class="idx-sep">|</span
+            ><span class="idx-char"> a </span><span class="idx-sep">|</span
+            ><span class="idx-char"> </span><span class="idx-sep">|</span
+            ><span class="idx-char"> M </span><span class="idx-sep">|</span
+            ><span class="idx-char"> u </span><span class="idx-sep">|</span
+            ><span class="idx-char"> n </span><span class="idx-sep">|</span
+            ><span class="idx-char"> d </span><span class="idx-sep">|</span
+            ><span class="idx-char"> o </span>
+            <span class="idx-sep">Positivo: </span
+            ><span class="idx-pos"> 0 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 1 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 2 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 3 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 4 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 5 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 6 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 7 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 8 </span><span class="idx-sep"> </span
+            ><span class="idx-pos"> 9 </span>
+            <span class="idx-sep">Negativo: </span
+            ><span class="idx-neg">-10 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-9 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-8 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-7 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-6 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-5 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-4 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-3 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-2 </span><span class="idx-sep"> </span
+            ><span class="idx-neg">-1 </span>
+          </div>
+
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #0c2c55">Índices positivos</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+<span class="fn">print</span>(cadena[<span class="nm">0</span>])  <span class="cm"># H  (primero)</span>
+<span class="fn">print</span>(cadena[<span class="nm">1</span>])  <span class="cm"># o</span>
+<span class="fn">print</span>(cadena[<span class="nm">5</span>])  <span class="cm"># M</span>
+<span class="fn">print</span>(cadena[<span class="nm">9</span>])  <span class="cm"># o  (último)</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0c2c55">Índices negativos</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+<span class="fn">print</span>(cadena[<span class="op">-</span><span class="nm">1</span>])  <span class="cm"># o  (último)</span>
+<span class="fn">print</span>(cadena[<span class="op">-</span><span class="nm">2</span>])  <span class="cm"># d  (penúltimo)</span>
+<span class="fn">print</span>(cadena[<span class="op">-</span><span class="nm">5</span>])  <span class="cm"># M</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0c2c55">Slicing (rebanado)</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+<span class="fn">print</span>(cadena[<span class="nm">0</span>:<span class="nm">4</span>])   <span class="cm"># Hola</span>
+<span class="fn">print</span>(cadena[<span class="nm">5</span>:])    <span class="cm"># Mundo</span>
+<span class="fn">print</span>(cadena[:<span class="nm">4</span>])    <span class="cm"># Hola</span>
+<span class="fn">print</span>(cadena[::<span class="nm">2</span>])   <span class="cm"># HlMno</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0c2c55">Último índice válido</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola"</span>
+<span class="cm"># len = 4  →  índices válidos: 0..3</span>
+
+ultimo <span class="op">=</span> cadena[<span class="fn">len</span>(cadena) <span class="op">-</span> <span class="nm">1</span>]
+<span class="fn">print</span>(ultimo)  <span class="cm"># a  (igual que cadena[-1])</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div>
+              El índice válido va de <strong>0</strong> a
+              <strong>len(cadena) − 1</strong>. Acceder a un índice fuera de ese
+              rango lanza un
+              <code
+                style="
+                  background: var(--red-l);
+                  color: var(--red);
+                  padding: 1px 5px;
+                  border-radius: 4px;
+                  font-family: &quot;JetBrains Mono&quot;, monospace;
+                "
+                >IndexError</code
+              >.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 4. RECORRER ══ -->
+        <section class="section" id="recorrer">
+          <div class="section-header">
+            <div class="section-num" style="background: #1a4d5e">4</div>
+            <h2>Recorrer cadenas</h2>
+          </div>
+          <p>
+            Las cadenas son <strong>iterables</strong>: se pueden recorrer
+            carácter por carácter usando un ciclo <em>for</em> o un ciclo
+            <em>while</em> con índice.
+          </p>
+
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Con for (sin índice)</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+<span class="kw">for</span> letra <span class="kw">in</span> cadena:
+    <span class="fn">print</span>(letra)
+
+<span class="cm"># H</span>
+<span class="cm"># o</span>
+<span class="cm"># l</span>
+<span class="cm"># a</span>
+<span class="cm"># ...</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Con while (usando índice)</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+
+indice <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">while</span> indice <span class="op">&lt;</span> <span class="fn">len</span>(cadena):
+    <span class="fn">print</span>(cadena[indice])
+    indice <span class="op">+=</span> <span class="nm">1</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Contar vocales</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+vocales <span class="op">=</span> <span class="nm">0</span>
+
+<span class="kw">for</span> letra <span class="kw">in</span> cadena<span class="at">.lower</span>():
+    <span class="kw">if</span> letra <span class="kw">in</span> <span class="st">"aeiou"</span>:
+        vocales <span class="op">+=</span> <span class="nm">1</span>
+
+<span class="fn">print</span>(vocales)  <span class="cm"># 4</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Construir cadena invertida</h4>
+              <pre><code>cadena <span class="op">=</span> <span class="st">"Python"</span>
+invertida <span class="op">=</span> <span class="st">""</span>
+
+<span class="kw">for</span> letra <span class="kw">in</span> cadena:
+    invertida <span class="op">=</span> letra <span class="op">+</span> invertida
+
+<span class="fn">print</span>(invertida)  <span class="cm"># nohtyP</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              Usa <strong>for</strong> cuando solo necesitas cada carácter. Usa
+              <strong>while con índice</strong> cuando necesitas conocer la
+              posición del carácter mientras iteras.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 5. ERRORES ══ -->
+        <section class="section" id="errores">
+          <div class="section-header">
+            <div class="section-num" style="background: #dc2626">5</div>
+            <h2>Errores comunes</h2>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Intentar modificar un carácter directamente</span>
+              <small>Las cadenas son inmutables → TypeError</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ TypeError: 'str' object does not support item assignment</span>
+cadena <span class="op">=</span> <span class="st">"Hola"</span>
+cadena[<span class="nm">0</span>] <span class="op">=</span> <span class="st">"h"</span>
+
+<span class="cm"># ✅ Correcto: construir una cadena nueva</span>
+cadena <span class="op">=</span> <span class="st">"h"</span> <span class="op">+</span> cadena[<span class="nm">1</span>:]
+<span class="fn">print</span>(cadena)  <span class="cm"># hola</span></code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>No verificar el −1 que devuelve find()</span>
+              <small
+                >Usar el resultado sin comprobar puede dar un carácter
+                inesperado</small
+              >
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ cadena[-1] es el último carácter, no "no encontrado"</span>
+cadena <span class="op">=</span> <span class="st">"Hola Mundo"</span>
+pos <span class="op">=</span> cadena<span class="at">.find</span>(<span class="st">"z"</span>)
+<span class="fn">print</span>(cadena[pos])  <span class="cm"># imprime "o" (índice -1)</span>
+
+<span class="cm"># ✅ Correcto: verificar antes de usar</span>
+pos <span class="op">=</span> cadena<span class="at">.find</span>(<span class="st">"z"</span>)
+<span class="kw">if</span> pos <span class="op">!=</span> <span class="op">-</span><span class="nm">1</span>:
+    <span class="fn">print</span>(cadena[pos])
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"No encontrado"</span>)</code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Usar .len() en lugar de len()</span>
+              <small>len() es función integrada, no método de str</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ AttributeError: 'str' object has no attribute 'len'</span>
+cadena <span class="op">=</span> <span class="st">"Hola"</span>
+<span class="fn">print</span>(cadena<span class="at">.len</span>())
+
+<span class="cm"># ✅ Correcto: len() se llama como función independiente</span>
+<span class="fn">print</span>(<span class="fn">len</span>(cadena))  <span class="cm"># 4</span></code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Índice fuera de rango al recorrer con while</span>
+              <small
+                >range(len+1) incluye un índice inválido → IndexError</small
+              >
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ IndexError: string index out of range</span>
+cadena <span class="op">=</span> <span class="st">"Hola"</span>  <span class="cm"># len = 4, índices 0-3</span>
+i <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">while</span> i <span class="op">&lt;=</span> <span class="fn">len</span>(cadena):  <span class="cm"># <= llega a 4 (inválido)</span>
+    <span class="fn">print</span>(cadena[i])
+    i <span class="op">+=</span> <span class="nm">1</span>
+
+<span class="cm"># ✅ Correcto: usar < (estrictamente menor)</span>
+i <span class="op">=</span> <span class="nm">0</span>
+<span class="kw">while</span> i <span class="op">&lt;</span> <span class="fn">len</span>(cadena):
+    <span class="fn">print</span>(cadena[i])
+    i <span class="op">+=</span> <span class="nm">1</span></code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 6. RECURSOS ══ -->
+        <section class="section" id="recursos">
+          <div class="section-header">
+            <div class="section-num" style="background: #629fad">6</div>
+            <h2>Recursos de estudio recomendados</h2>
+          </div>
+          <p>
+            Revisa estos recursos en el orden que prefieras. Se recomienda
+            empezar por los videos antes de la lectura.
+          </p>
+
+          <h3>📹 Videos en YouTube</h3>
+          <div class="resource-grid">
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=2T2TSMD4T2A"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fee2e2">▶️</div>
+              <div>
+                <h4>Cadenas en Python</h4>
+                <p>
+                  PrograLabs — introducción a cadenas, métodos y ejemplos en
+                  español.
+                </p>
+                <div class="url">youtube.com · PrograLabs</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=lSItwlnF0eU"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #ede9fe">▶️</div>
+              <div>
+                <h4>Métodos de cadenas en Python</h4>
+                <p>
+                  PrograLabs — upper, lower, replace, find y más con ejemplos
+                  claros.
+                </p>
+                <div class="url">youtube.com · PrograLabs</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=oxXsnk-oDjw"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fff7ed">▶️</div>
+              <div>
+                <h4>Índices y slicing en Python</h4>
+                <p>
+                  Cómo acceder a caracteres por posición y extraer subcadenas.
+                </p>
+                <div class="url">youtube.com</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.youtube.com/watch?v=Z3UtCzBPHNo"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #dcfce7">▶️</div>
+              <div>
+                <h4>f-strings en Python</h4>
+                <p>
+                  Koolac — formato moderno para insertar variables en cadenas.
+                </p>
+                <div class="url">youtube.com · Koolac</div>
+              </div>
+            </a>
+          </div>
+
+          <h3>📖 Lectura y documentación</h3>
+          <div class="resource-grid">
+            <a
+              class="resource-card"
+              href="https://docs.python.org/3/library/stdtypes.html#string-methods"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #eff6ff">📙</div>
+              <div>
+                <h4>Métodos de cadenas — Python oficial</h4>
+                <p>
+                  Referencia completa de todos los métodos disponibles en str.
+                </p>
+                <div class="url">docs.python.org</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.geeksforgeeks.org/python-string/"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #dcfce7">📗</div>
+              <div>
+                <h4>Python Strings — GeeksForGeeks</h4>
+                <p>
+                  Explicación completa de cadenas, métodos e índices con
+                  ejemplos.
+                </p>
+                <div class="url">geeksforgeeks.org</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.w3schools.com/python/python_strings.asp"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fef9c3">📒</div>
+              <div>
+                <h4>Python Strings — W3Schools</h4>
+                <p>
+                  Recurso interactivo con editor en línea para practicar en el
+                  navegador.
+                </p>
+                <div class="url">w3schools.com</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.w3schools.com/python/python_ref_string.asp"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #ede9fe">📘</div>
+              <div>
+                <h4>String Methods Reference — W3Schools</h4>
+                <p>
+                  Tabla de todos los métodos de cadena con ejemplos ejecutables.
+                </p>
+                <div class="url">w3schools.com</div>
+              </div>
+            </a>
+          </div>
+
+          <h3>💻 Práctica en línea</h3>
+          <div class="resource-grid">
+            <a
+              class="resource-card"
+              href="https://pythontutor.com"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #e6f5f3">🐍</div>
+              <div>
+                <h4>Python Tutor</h4>
+                <p>
+                  Visualiza cómo cambian los índices y variables en cada paso.
+                  <strong>Muy recomendado</strong> para entender slicing e
+                  índices.
+                </p>
+                <div class="url">pythontutor.com</div>
+              </div>
+            </a>
+            <a
+              class="resource-card"
+              href="https://www.w3schools.com/python/exercise.asp?filename=exercise_strings1"
+              target="_blank"
+              rel="noopener"
+            >
+              <div class="resource-icon" style="background: #fff7ed">✏️</div>
+              <div>
+                <h4>Ejercicios interactivos — W3Schools</h4>
+                <p>
+                  Ejercicios con corrección automática para practicar cadenas.
+                </p>
+                <div class="url">w3schools.com</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="callout callout-gold">
+            <span class="callout-icon">⭐</span>
+            <div>
+              <b>Recomendación:</b> copia los ejemplos de esta página en
+              <a
+                href="https://pythontutor.com"
+                target="_blank"
+                style="color: var(--gold)"
+                >Python Tutor</a
+              >
+              y ejecútalos paso a paso. Ver cómo cambian las variables y los
+              índices visualmente es la forma más rápida de entender las
+              cadenas.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <strong>CC2005 — Algoritmos y Programación Básica</strong> · Universidad
+      del Valle de Guatemala · Semestre 01-2026
+    </footer>
+
+    <script>
+      const sections = document.querySelectorAll(".section");
+      const navItems = document.querySelectorAll(".nav-item");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              navItems.forEach((n) => n.classList.remove("active"));
+              const active = document.querySelector(
+                `.nav-item[href="#${e.target.id}"]`,
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.3 },
+      );
+      sections.forEach((s) => observer.observe(s));
+    </script>
+  </body>
+</html>

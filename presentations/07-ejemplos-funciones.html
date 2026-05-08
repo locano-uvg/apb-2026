@@ -1,0 +1,962 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TBL 3 — Funciones · CC2005</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;family=Syne:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --navy: #0C2C55;
+        --blue: #296374;
+        --blue-l: #e0eaed;
+        --teal: #629FAD;
+        --teal-l: #e8f4f7;
+        --purple: #0C2C55;
+        --purp-l: #e8ecf2;
+        --coral: #1a4d5e;
+        --coral-l: #e4ecef;
+        --green: #296374;
+        --green-l: #e0eaed;
+        --red: #dc2626;
+        --red-l: #fee2e2;
+        --gold: #629FAD;
+        --gold-l: #e8f4f7;
+        --dark: #0C2C55;
+        --body: #296374;
+        --muted: #629FAD;
+        --border: #c8dde3;
+        --bg: #f5f5f5;
+        --white: #ffffff;
+        --code-bg: #051729;
+        --sidebar-w: 240px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--body);
+        line-height: 1.7;
+        font-size: 15px;
+      }
+
+      /* ── HEADER ── */
+      .site-header {
+        background: var(--navy);
+        color: white;
+        padding: 2.5rem 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .site-header::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.25);
+      }
+      .site-header::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 30%;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(13, 148, 136, 0.2);
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .header-tag {
+        display: inline-block;
+        background: var(--teal);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 12px;
+      }
+      .site-header h1 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .site-header p {
+        color: #93c5fd;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .header-alert {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #fcd34d;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        gap: 0;
+        align-items: start;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 2rem 1rem 2rem 1.5rem;
+        border-right: 1px solid var(--border);
+        background: var(--white);
+      }
+      .sidebar-title {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+        padding-left: 8px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 8px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--body);
+        text-decoration: none;
+        transition: all 0.15s;
+        margin-bottom: 2px;
+      }
+      .nav-item:hover {
+        background: var(--bg);
+        color: var(--navy);
+      }
+      .nav-item.active {
+        background: var(--blue-l);
+        color: var(--blue);
+      }
+      .nav-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        padding: 2.5rem 2.5rem 4rem;
+      }
+
+      /* ── SECTIONS ── */
+      .section {
+        margin-bottom: 3.5rem;
+        scroll-margin-top: 1rem;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border);
+      }
+      .section-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+      }
+      .section h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      .section h3 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 1.2rem 0 0.5rem;
+      }
+      .section p {
+        color: var(--body);
+        margin-bottom: 0.6rem;
+      }
+
+      /* ── CODE BLOCKS ── */
+      .code-wrap {
+        position: relative;
+        margin: 0.6rem 0 1rem;
+      }
+      .code-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        color: #475569;
+        background: #1e293b;
+        padding: 4px 10px;
+        border-radius: 0 8px 0 6px;
+        letter-spacing: 0.04em;
+      }
+      pre {
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 1.1rem 1.2rem;
+        overflow-x: auto;
+        border: 1px solid #1e293b;
+      }
+      pre code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.75;
+        color: #e2e8f0;
+      }
+      .kw { color: #93c5fd; }
+      .fn { color: #6ee7b7; }
+      .cm { color: #475569; font-style: italic; }
+      .st { color: #fca5a5; }
+      .nm { color: #fcd34d; }
+      .op { color: #c084fc; }
+      .df { color: #f9a8d4; }
+
+      /* ── TWO COLUMN CODE ── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 0.6rem 0 1rem;
+      }
+      @media (max-width: 700px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      .col-block h4 {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      /* ── TABLE ── */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        margin: 0.6rem 0 1rem;
+      }
+      .data-table th {
+        background: var(--navy);
+        color: white;
+        padding: 9px 14px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+      }
+      .data-table th:first-child { border-radius: 8px 0 0 0; }
+      .data-table th:last-child  { border-radius: 0 8px 0 0; }
+      .data-table td {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table tr:last-child td { border-bottom: none; }
+      .data-table tr:nth-child(even) td { background: var(--bg); }
+      .data-table code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        background: var(--blue-l);
+        color: var(--blue);
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+
+      /* ── CALLOUT BOXES ── */
+      .callout {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 0.8rem 0;
+        font-size: 14px;
+      }
+      .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+      .callout-tip  { background: var(--teal-l); border-left: 3px solid var(--teal); }
+      .callout-tip .callout-icon { color: var(--teal); }
+      .callout-warn { background: var(--red-l);  border-left: 3px solid var(--red); }
+      .callout-warn .callout-icon { color: var(--red); }
+      .callout-info { background: var(--blue-l); border-left: 3px solid var(--blue); }
+      .callout-info .callout-icon { color: var(--blue); }
+      .callout-gold { background: var(--gold-l); border-left: 3px solid var(--gold); }
+      .callout-gold .callout-icon { color: var(--gold); }
+      .callout b { font-weight: 600; }
+
+      /* ── ERROR CARD ── */
+      .error-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0.8rem 0;
+      }
+      .error-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .error-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+      .error-header span { font-size: 13px; font-weight: 600; color: var(--dark); }
+      .error-header small { font-size: 12px; color: var(--muted); margin-left: auto; }
+      .error-body { padding: 0; }
+      .error-body pre { border-radius: 0; border: none; margin: 0; }
+
+      /* ── FOOTER ── */
+      .site-footer {
+        background: var(--navy);
+        color: #94a3b8;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 13px;
+        margin-top: 2rem;
+      }
+      .site-footer strong { color: white; }
+
+      /* ── ACTIVE NAV ── */
+      .section:target .section-header {
+        animation: highlight 0.6s ease;
+      }
+      @keyframes highlight {
+        0%, 100% { background: transparent; }
+        30%       { background: var(--blue-l); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-tag">CC2005 · Semestre 01-2026</div>
+        <h1>TBL 3 — Funciones</h1>
+        <p>Material de preparación · Algoritmos y Programación Básica · UVG</p>
+        <div class="header-alert">
+          ⚡ Revisa este material <strong>antes</strong> de la sesión. El iRAT
+          evaluará estos conceptos.
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <div class="sidebar-title">Contenido</div>
+        <a href="#definicion" class="nav-item active">
+          <span class="nav-dot" style="background: #296374">1</span> Definición
+        </a>
+        <a href="#creacion" class="nav-item">
+          <span class="nav-dot" style="background: #629FAD">2</span> Crear funciones
+        </a>
+        <a href="#parametros" class="nav-item">
+          <span class="nav-dot" style="background: #0C2C55">3</span> Parámetros
+        </a>
+        <a href="#retorno" class="nav-item">
+          <span class="nav-dot" style="background: #1a4d5e">4</span> Retorno
+        </a>
+        <a href="#scope" class="nav-item">
+          <span class="nav-dot" style="background: #629FAD">5</span> Alcance (Scope)
+        </a>
+        <a href="#defaults" class="nav-item">
+          <span class="nav-dot" style="background: #296374">6</span> Parámetros por defecto
+        </a>
+        <a href="#errors" class="nav-item">
+          <span class="nav-dot" style="background: #dc2626">7</span> Errores comunes
+        </a>
+        <a href="#buenas-practicas" class="nav-item">
+          <span class="nav-dot" style="background: #0C2C55">8</span> Buenas prácticas
+        </a>
+      </nav>
+
+      <!-- MAIN -->
+      <main class="main">
+
+        <!-- ══ 1. DEFINICIÓN ══ -->
+        <section class="section" id="definicion">
+          <div class="section-header">
+            <div class="section-num" style="background: #296374">1</div>
+            <h2>Definición y ventajas</h2>
+          </div>
+          <p>
+            Una <strong>función</strong> es un bloque de código que se puede
+            invocar para realizar una tarea específica. Es una forma eficiente
+            de realizar tareas repetitivas y ayuda a disminuir la cantidad de
+            código a programar.
+          </p>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ventaja</th>
+                <th>¿Por qué importa?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Reduce repetición de código</td>
+                <td>Escribes la lógica una vez y la usas cuantas veces necesites.</td>
+              </tr>
+              <tr>
+                <td>Mejora legibilidad</td>
+                <td>Un nombre descriptivo explica qué hace el bloque sin leerlo línea por línea.</td>
+              </tr>
+              <tr>
+                <td>Facilita el mantenimiento</td>
+                <td>Si algo cambia, solo modificas la función, no cada lugar donde se usó.</td>
+              </tr>
+              <tr>
+                <td>Permite reutilización</td>
+                <td>La misma función puede usarse en distintos programas o contextos.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              Piensa en una función como una <b>receta</b>: la escribes una vez
+              y la sigues cada vez que necesitas el mismo resultado, sin repetir
+              los pasos.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 2. CREACIÓN ══ -->
+        <section class="section" id="creacion">
+          <div class="section-header">
+            <div class="section-num" style="background: #629FAD">2</div>
+            <h2>Crear funciones</h2>
+          </div>
+          <p>
+            Para definir una función en Python se usa la palabra reservada
+            <strong>def</strong>, seguida del nombre de la función y paréntesis.
+            El cuerpo va indentado con 4 espacios.
+          </p>
+
+          <h3>Sintaxis</h3>
+          <div class="code-wrap">
+            <span class="code-label">python</span>
+            <pre><code><span class="kw">def</span> <span class="fn">nombre_funcion</span>():
+    <span class="cm"># instrucciones (indentadas con 4 espacios)</span>
+    <span class="cm"># se ejecutan cada vez que se llama la función</span></code></pre>
+          </div>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #629FAD">Función sin parámetros</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">saludar</span>():
+    <span class="fn">print</span>(<span class="st">"Hola mundo"</span>)
+
+<span class="fn">saludar</span>()  <span class="cm"># Hola mundo</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #629FAD">Reutilizar la misma función</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">saludar</span>():
+    <span class="fn">print</span>(<span class="st">"Hola mundo"</span>)
+
+<span class="fn">saludar</span>()
+<span class="fn">saludar</span>()
+<span class="fn">saludar</span>()
+<span class="cm"># Imprime 3 veces "Hola mundo"</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-info">
+            <span class="callout-icon">ℹ️</span>
+            <div>
+              <b>Definir ≠ ejecutar.</b> Escribir <code>def saludar():</code>
+              solo <em>crea</em> la función. Para que corra debes
+              <em>llamarla</em>: <code>saludar()</code>.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 3. PARÁMETROS ══ -->
+        <section class="section" id="parametros">
+          <div class="section-header">
+            <div class="section-num" style="background: #0C2C55">3</div>
+            <h2>Parámetros</h2>
+          </div>
+          <p>
+            Un <strong>parámetro</strong> es una variable declarada en la
+            definición de la función que sirve para recibir valores de entrada
+            cuando la función es llamada. Hacen las funciones flexibles y
+            reutilizables.
+          </p>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Un parámetro</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">saludar</span>(nombre):
+    <span class="fn">print</span>(<span class="st">f"Hola </span>{nombre}<span class="st">"</span>)
+
+<span class="fn">saludar</span>(<span class="st">"Ana"</span>)   <span class="cm"># Hola Ana</span>
+<span class="fn">saludar</span>(<span class="st">"Luis"</span>)  <span class="cm"># Hola Luis</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Dos parámetros</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">suma</span>(a, b):
+    <span class="fn">print</span>(a <span class="op">+</span> b)
+
+<span class="fn">suma</span>(<span class="nm">3</span>, <span class="nm">4</span>)   <span class="cm"># 7</span>
+<span class="fn">suma</span>(<span class="nm">10</span>, <span class="nm">5</span>)  <span class="cm"># 15</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Tres parámetros — promedio</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">promedio</span>(n1, n2, n3):
+    total <span class="op">=</span> n1 <span class="op">+</span> n2 <span class="op">+</span> n3
+    <span class="fn">print</span>(total <span class="op">/</span> <span class="nm">3</span>)
+
+<span class="fn">promedio</span>(<span class="nm">5</span>, <span class="nm">10</span>, <span class="nm">7</span>)  <span class="cm"># 7.333…</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Parámetro con operación</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">doble</span>(numero):
+    <span class="fn">print</span>(numero <span class="op">*</span> <span class="nm">2</span>)
+
+<span class="fn">doble</span>(<span class="nm">7</span>)   <span class="cm"># 14</span>
+<span class="fn">doble</span>(<span class="nm">15</span>)  <span class="cm"># 30</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              Los parámetros se declaran <b>dentro</b> de los paréntesis al
+              definir la función. Los valores concretos que envías al llamarla
+              se llaman <b>argumentos</b>.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 4. RETORNO ══ -->
+        <section class="section" id="retorno">
+          <div class="section-header">
+            <div class="section-num" style="background: #1a4d5e">4</div>
+            <h2>Retorno de valores</h2>
+          </div>
+          <p>
+            El <strong>retorno</strong> es el valor que la función devuelve al
+            terminar su ejecución. Se indica con la palabra reservada
+            <strong>return</strong>. Una función puede retornar cualquier tipo
+            de dato, o no retornar nada.
+          </p>
+
+          <h3>Sintaxis</h3>
+          <div class="code-wrap">
+            <span class="code-label">python</span>
+            <pre><code><span class="kw">def</span> <span class="fn">nombre</span>(parametros):
+    <span class="cm"># instrucciones</span>
+    <span class="kw">return</span> resultado   <span class="cm"># devuelve el valor al que llamó la función</span></code></pre>
+          </div>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Retornar un número</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">cuadrado</span>(x):
+    <span class="kw">return</span> x <span class="op">*</span> x
+
+resultado <span class="op">=</span> <span class="fn">cuadrado</span>(<span class="nm">5</span>)
+<span class="fn">print</span>(resultado)  <span class="cm"># 25</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Celsius a Fahrenheit</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">celsius_a_fahrenheit</span>(c):
+    <span class="kw">return</span> (c <span class="op">*</span> <span class="nm">9</span><span class="op">/</span><span class="nm">5</span>) <span class="op">+</span> <span class="nm">32</span>
+
+<span class="fn">print</span>(<span class="fn">celsius_a_fahrenheit</span>(<span class="nm">25</span>))
+<span class="cm"># 77.0</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">Promedio con return</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">promedio</span>(n1, n2, n3):
+    total <span class="op">=</span> n1 <span class="op">+</span> n2 <span class="op">+</span> n3
+    <span class="kw">return</span> total <span class="op">/</span> <span class="nm">3</span>
+
+p <span class="op">=</span> <span class="fn">promedio</span>(<span class="nm">5</span>, <span class="nm">10</span>, <span class="nm">7</span>)
+<span class="fn">print</span>(p)  <span class="cm"># 7.333…</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #1a4d5e">print vs return</h4>
+              <pre><code><span class="cm"># Solo imprime — no guarda nada</span>
+<span class="kw">def</span> <span class="fn">f1</span>(x):
+    <span class="fn">print</span>(x <span class="op">*</span> <span class="nm">2</span>)
+
+<span class="cm"># Retorna — puedes usar el valor</span>
+<span class="kw">def</span> <span class="fn">f2</span>(x):
+    <span class="kw">return</span> x <span class="op">*</span> <span class="nm">2</span>
+
+a <span class="op">=</span> <span class="fn">f2</span>(<span class="nm">5</span>) <span class="op">+</span> <span class="nm">10</span>  <span class="cm"># a = 20</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div>
+              Cuando una función no tiene <code>return</code>, Python devuelve
+              <code>None</code> automáticamente. Si intentas usar ese valor en
+              una operación obtendrás un error.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 5. SCOPE ══ -->
+        <section class="section" id="scope">
+          <div class="section-header">
+            <div class="section-num" style="background: #629FAD">5</div>
+            <h2>Alcance (Scope)</h2>
+          </div>
+          <p>
+            Los parámetros y variables declaradas <strong>dentro</strong> de
+            una función solo existen ahí. No se pueden acceder desde fuera.
+            Esto se llama <strong>alcance local</strong>.
+          </p>
+
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #629FAD">Variable local (no accesible fuera)</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">suma</span>(a, b):
+    resultado <span class="op">=</span> a <span class="op">+</span> b
+    <span class="kw">return</span> resultado
+
+<span class="fn">print</span>(<span class="fn">suma</span>(<span class="nm">3</span>, <span class="nm">4</span>))  <span class="cm"># 7</span>
+
+<span class="cm"># ❌ Esto genera NameError:</span>
+<span class="cm"># print(resultado)</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #629FAD">Cada llamada tiene su propio scope</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">cuadrado</span>(x):
+    potencia <span class="op">=</span> x <span class="op">**</span> <span class="nm">2</span>
+    <span class="kw">return</span> potencia
+
+<span class="fn">print</span>(<span class="fn">cuadrado</span>(<span class="nm">3</span>))  <span class="cm"># 9</span>
+<span class="fn">print</span>(<span class="fn">cuadrado</span>(<span class="nm">5</span>))  <span class="cm"># 25</span>
+<span class="cm"># 'potencia' no existe aquí</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div>
+              Piensa en el scope de una función como una <b>caja sellada</b>:
+              lo que está dentro no se ve desde fuera, y cada vez que la llamas
+              se crea una caja nueva independiente.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 6. PARÁMETROS POR DEFECTO ══ -->
+        <section class="section" id="defaults">
+          <div class="section-header">
+            <div class="section-num" style="background: #296374">6</div>
+            <h2>Parámetros por defecto</h2>
+          </div>
+          <p>
+            Un parámetro por defecto tiene un valor predeterminado que se usa
+            cuando el argumento <strong>no es proporcionado</strong> al llamar
+            la función.
+          </p>
+
+          <h3>Sintaxis</h3>
+          <div class="code-wrap">
+            <span class="code-label">python</span>
+            <pre><code><span class="kw">def</span> <span class="fn">nombre</span>(parametro<span class="op">=</span>valor_por_defecto):
+    <span class="cm"># instrucciones</span></code></pre>
+          </div>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #296374">Un parámetro con defecto</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">saludar</span>(nombre<span class="op">=</span><span class="st">"invitado"</span>):
+    <span class="fn">print</span>(<span class="st">f"Hola </span>{nombre}<span class="st">"</span>)
+
+<span class="fn">saludar</span>()         <span class="cm"># Hola invitado</span>
+<span class="fn">saludar</span>(<span class="st">"Luis"</span>)   <span class="cm"># Hola Luis</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #296374">Combinar obligatorio y defecto</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">potencia</span>(base, exponente<span class="op">=</span><span class="nm">2</span>):
+    <span class="kw">return</span> base <span class="op">**</span> exponente
+
+<span class="fn">print</span>(<span class="fn">potencia</span>(<span class="nm">3</span>))      <span class="cm"># 9  (3²)</span>
+<span class="fn">print</span>(<span class="fn">potencia</span>(<span class="nm">2</span>, <span class="nm">10</span>))  <span class="cm"># 1024</span></code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div>
+              Los parámetros con valor por defecto deben ir
+              <b>después</b> de los parámetros obligatorios, o Python lanzará
+              un <code>SyntaxError</code>.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 7. ERRORES COMUNES ══ -->
+        <section class="section" id="errors">
+          <div class="section-header">
+            <div class="section-num" style="background: #dc2626">7</div>
+            <h2>Errores comunes</h2>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Olvidar return</span>
+              <small>La función retorna None sin avisar</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ No retorna nada → resultado es None</span>
+<span class="kw">def</span> <span class="fn">cuadrado</span>(x):
+    x <span class="op">*</span> x         <span class="cm"># calcula pero no retorna</span>
+
+resultado <span class="op">=</span> <span class="fn">cuadrado</span>(<span class="nm">5</span>)
+<span class="fn">print</span>(resultado)  <span class="cm"># None</span>
+
+<span class="cm"># ✅ Correcto</span>
+<span class="kw">def</span> <span class="fn">cuadrado</span>(x):
+    <span class="kw">return</span> x <span class="op">*</span> x
+
+<span class="fn">print</span>(<span class="fn">cuadrado</span>(<span class="nm">5</span>))  <span class="cm"># 25</span></code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Llamar la función antes de definirla</span>
+              <small>Python ejecuta de arriba a abajo</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="cm"># ❌ NameError: 'saludar' no está definida aún</span>
+<span class="fn">saludar</span>()
+
+<span class="kw">def</span> <span class="fn">saludar</span>():
+    <span class="fn">print</span>(<span class="st">"Hola"</span>)
+
+<span class="cm"># ✅ Correcto: definir primero, llamar después</span>
+<span class="kw">def</span> <span class="fn">saludar</span>():
+    <span class="fn">print</span>(<span class="st">"Hola"</span>)
+
+<span class="fn">saludar</span>()</code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Número incorrecto de argumentos</span>
+              <small>Debes enviar exactamente los argumentos que la función espera</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="kw">def</span> <span class="fn">suma</span>(a, b):
+    <span class="kw">return</span> a <span class="op">+</span> b
+
+<span class="cm"># ❌ TypeError: falta un argumento</span>
+<span class="fn">suma</span>(<span class="nm">5</span>)
+
+<span class="cm"># ❌ TypeError: demasiados argumentos</span>
+<span class="fn">suma</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>)
+
+<span class="cm"># ✅ Correcto</span>
+<span class="fn">suma</span>(<span class="nm">5</span>, <span class="nm">3</span>)  <span class="cm"># 8</span></code></pre>
+            </div>
+          </div>
+
+          <div class="error-card">
+            <div class="error-header">
+              <div class="error-dot"></div>
+              <span>Acceder a variable local fuera de la función</span>
+              <small>Las variables locales solo existen dentro de la función</small>
+            </div>
+            <div class="error-body">
+              <pre><code><span class="kw">def</span> <span class="fn">calcular</span>():
+    valor <span class="op">=</span> <span class="nm">42</span>
+    <span class="kw">return</span> valor
+
+<span class="fn">calcular</span>()
+
+<span class="cm"># ❌ NameError: 'valor' no está definida aquí</span>
+<span class="cm"># print(valor)</span>
+
+<span class="cm"># ✅ Usar el valor retornado</span>
+resultado <span class="op">=</span> <span class="fn">calcular</span>()
+<span class="fn">print</span>(resultado)  <span class="cm"># 42</span></code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 8. BUENAS PRÁCTICAS ══ -->
+        <section class="section" id="buenas-practicas">
+          <div class="section-header">
+            <div class="section-num" style="background: #0C2C55">8</div>
+            <h2>Buenas prácticas</h2>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Práctica</th>
+                <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nombres descriptivos</td>
+                <td><code>calcular_area()</code> es mejor que <code>ca()</code> o <code>funcion1()</code>.</td>
+              </tr>
+              <tr>
+                <td>Una tarea por función</td>
+                <td>Cada función debe hacer una sola cosa bien definida.</td>
+              </tr>
+              <tr>
+                <td>Pocos parámetros</td>
+                <td>Más de 3-4 parámetros es señal de que la función hace demasiado.</td>
+              </tr>
+              <tr>
+                <td>Docstrings</td>
+                <td>Una línea entre comillas triples describe qué hace la función.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Ejemplos</h3>
+          <div class="two-col">
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Con docstring</h4>
+              <pre><code><span class="kw">def</span> <span class="fn">area_circulo</span>(radio):
+    <span class="st">"""Calcula el área de un círculo."""</span>
+    <span class="kw">return</span> <span class="nm">3.14159</span> <span class="op">*</span> radio <span class="op">**</span> <span class="nm">2</span>
+
+<span class="fn">print</span>(<span class="fn">area_circulo</span>(<span class="nm">5</span>))  <span class="cm"># 78.53…</span></code></pre>
+            </div>
+            <div class="col-block">
+              <h4 style="color: #0C2C55">Nombre descriptivo vs. genérico</h4>
+              <pre><code><span class="cm"># ❌ Nombre poco descriptivo</span>
+<span class="kw">def</span> <span class="fn">f</span>(x, y):
+    <span class="kw">return</span> x <span class="op">+</span> y
+
+<span class="cm"># ✅ Nombre claro</span>
+<span class="kw">def</span> <span class="fn">sumar_enteros</span>(a, b):
+    <span class="kw">return</span> a <span class="op">+</span> b</code></pre>
+            </div>
+          </div>
+
+          <div class="callout callout-gold">
+            <span class="callout-icon">⭐</span>
+            <div>
+              <b>Regla práctica:</b> si necesitas un comentario para explicar
+              qué hace una función, probablemente su nombre no es suficientemente
+              descriptivo. Mejora el nombre primero; agrega el docstring para el
+              <em>cómo</em> y el <em>por qué</em>.
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <strong>CC2005 — Algoritmos y Programación Básica</strong> · Universidad
+      del Valle de Guatemala · Semestre 01-2026
+    </footer>
+
+    <script>
+      const sections = document.querySelectorAll(".section");
+      const navItems = document.querySelectorAll(".nav-item");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              navItems.forEach((n) => n.classList.remove("active"));
+              const active = document.querySelector(
+                `.nav-item[href="#${e.target.id}"]`,
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.3 },
+      );
+      sections.forEach((s) => observer.observe(s));
+    </script>
+  </body>
+</html>
