@@ -65,11 +65,12 @@ export const presentations = [
     image: "./assets/08-cadenas.png",
     links: {
       ver: "./presentations/08-cadenas.html",
-      pdf: "./pdf/08-cadenas.pdf",
-      md: "./md/08-cadenas.md",
-      ejemplos: REPO_TREE("05 - Cadenas"),
+      // pdf: "./pdf/08-cadenas.pdf",
+      // md: "./md/08-cadenas.md",
+      // ejemplos: REPO_TREE("05 - Cadenas"),
+      ejemplos: "./presentations/08-ejemplos-cadenas.html",
     },
-    active: false,
+    active: true,
   },
   {
     id: 7,
@@ -77,11 +78,12 @@ export const presentations = [
     image: "./assets/07-funciones.png",
     links: {
       ver: "./presentations/07-funciones.html",
-      pdf: "./pdf/07-funciones.pdf",
-      md: "./md/07-funciones.md",
-      ejemplos: REPO_TREE("04 - Funciones"),
+      // pdf: "./pdf/07-funciones.pdf",
+      // md: "./md/07-funciones.md",
+      // ejemplos: REPO_TREE("04 - Funciones"),
+      ejemplos: "./presentations/07-ejemplos-funciones.html",
     },
-    active: false,
+    active: true,
   },
   {
     id: 6,
