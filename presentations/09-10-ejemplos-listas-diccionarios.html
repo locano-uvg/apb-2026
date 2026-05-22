@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TBL — Listas y Diccionarios · CC2005</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --navy: #0c2c55;
+        --blue: #296374;
+        --blue-l: #e0eaed;
+        --teal: #629fad;
+        --teal-l: #e8f4f7;
+        --purple: #0c2c55;
+        --purp-l: #e8ecf2;
+        --coral: #1a4d5e;
+        --coral-l: #e4ecef;
+        --green: #296374;
+        --green-l: #e0eaed;
+        --red: #dc2626;
+        --red-l: #fee2e2;
+        --gold: #629fad;
+        --gold-l: #e8f4f7;
+        --dark: #0c2c55;
+        --body: #296374;
+        --muted: #629fad;
+        --border: #c8dde3;
+        --bg: #f5f5f5;
+        --white: #ffffff;
+        --code-bg: #051729;
+        --sidebar-w: 240px;
+        /* tab accent colors */
+        --listas-accent: #2563eb;
+        --dict-accent: #7c3aed;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--body);
+        line-height: 1.7;
+        font-size: 15px;
+      }
+
+      /* ── HEADER ── */
+      .site-header {
+        background: var(--navy);
+        color: white;
+        padding: 2.5rem 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .site-header::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.25);
+      }
+      .site-header::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 30%;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(13, 148, 136, 0.2);
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .header-tag {
+        display: inline-block;
+        background: var(--teal);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 12px;
+      }
+      .site-header h1 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .site-header p {
+        color: #93c5fd;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .header-alert {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #fcd34d;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* ── TAB BAR ── */
+      .tab-bar {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        padding: 0 2rem;
+        gap: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+      .tab-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.9rem 1.5rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.18s;
+        margin-bottom: -1px;
+      }
+      .tab-btn:hover {
+        color: var(--dark);
+      }
+      .tab-btn.active-listas {
+        color: var(--listas-accent);
+        border-bottom-color: var(--listas-accent);
+      }
+      .tab-btn.active-dict {
+        color: var(--dict-accent);
+        border-bottom-color: var(--dict-accent);
+      }
+      .tab-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: white;
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        gap: 0;
+        align-items: start;
+      }
+      .tab-panel {
+        display: none;
+        width: 100%;
+      }
+      .tab-panel.active {
+        display: contents;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        position: sticky;
+        top: 49px;
+        height: calc(100vh - 49px);
+        overflow-y: auto;
+        padding: 2rem 1rem 2rem 1.5rem;
+        border-right: 1px solid var(--border);
+        background: var(--white);
+      }
+      .sidebar-title {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+        padding-left: 8px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 8px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--body);
+        text-decoration: none;
+        transition: all 0.15s;
+        margin-bottom: 2px;
+      }
+      .nav-item:hover {
+        background: var(--bg);
+        color: var(--navy);
+      }
+      .nav-item.active {
+        background: var(--blue-l);
+        color: var(--blue);
+      }
+      .nav-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        padding: 2.5rem 2.5rem 4rem;
+      }
+
+      /* ── SECTIONS ── */
+      .section {
+        margin-bottom: 3.5rem;
+        scroll-margin-top: 3.5rem;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border);
+      }
+      .section-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+      }
+      .section h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      .section h3 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 1.2rem 0 0.5rem;
+      }
+      .section p {
+        color: var(--body);
+        margin-bottom: 0.6rem;
+      }
+
+      /* ── CODE ── */
+      .code-wrap {
+        position: relative;
+        margin: 0.6rem 0 1rem;
+      }
+      .code-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        color: #475569;
+        background: #1e293b;
+        padding: 4px 10px;
+        border-radius: 0 8px 0 6px;
+        letter-spacing: 0.04em;
+      }
+      pre {
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 1.1rem 1.2rem;
+        overflow-x: auto;
+        border: 1px solid #1e293b;
+      }
+      pre code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.75;
+        color: #e2e8f0;
+      }
+      .kw {
+        color: #93c5fd;
+      }
+      .fn {
+        color: #6ee7b7;
+      }
+      .cm {
+        color: #475569;
+        font-style: italic;
+      }
+      .st {
+        color: #fca5a5;
+      }
+      .nm {
+        color: #fcd34d;
+      }
+      .op {
+        color: #c084fc;
+      }
+      .at {
+        color: #6ee7b7;
+      }
+
+      /* ── TWO COL ── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 0.6rem 0 1rem;
+      }
+      @media (max-width: 700px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      .col-block h4 {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      /* ── METHOD GRID ── */
+      .method-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin: 0.6rem 0 1rem;
+      }
+      @media (max-width: 700px) {
+        .method-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .method-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .method-card-header {
+        padding: 8px 14px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .method-card pre {
+        border-radius: 0;
+        border: none;
+        padding: 0.9rem 1rem;
+        margin: 0;
+      }
+
+      /* ── TABLE ── */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        margin: 0.6rem 0 1rem;
+      }
+      .data-table th {
+        background: var(--navy);
+        color: white;
+        padding: 9px 14px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+      }
+      .data-table th:first-child {
+        border-radius: 8px 0 0 0;
+      }
+      .data-table th:last-child {
+        border-radius: 0 8px 0 0;
+      }
+      .data-table td {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tr:nth-child(even) td {
+        background: var(--bg);
+      }
+      .data-table code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        background: var(--blue-l);
+        color: var(--blue);
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+
+      /* ── CALLOUT ── */
+      .callout {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 0.8rem 0;
+        font-size: 14px;
+      }
+      .callout-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .callout-tip {
+        background: var(--teal-l);
+        border-left: 3px solid var(--teal);
+      }
+      .callout-tip .callout-icon {
+        color: var(--teal);
+      }
+      .callout-warn {
+        background: var(--red-l);
+        border-left: 3px solid var(--red);
+      }
+      .callout-warn .callout-icon {
+        color: var(--red);
+      }
+      .callout-info {
+        background: var(--blue-l);
+        border-left: 3px solid var(--blue);
+      }
+      .callout-info .callout-icon {
+        color: var(--blue);
+      }
+      .callout-gold {
+        background: var(--gold-l);
+        border-left: 3px solid var(--gold);
+      }
+      .callout-gold .callout-icon {
+        color: var(--gold);
+      }
+      .callout b {
+        font-weight: 600;
+      }
+
+      /* ── ERROR CARD ── */
+      .error-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0.8rem 0;
+      }
+      .error-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .error-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+      .error-header span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .error-header small {
+        font-size: 12px;
+        color: var(--muted);
+        margin-left: auto;
+      }
+      .error-body pre {
+        border-radius: 0;
+        border: none;
+        margin: 0;
+      }
+
+      /* ── FOOTER ── */
+      .site-footer {
+        background: var(--navy);
+        color: #94a3b8;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 13px;
+        margin-top: 2rem;
+      }
+      .site-footer strong {
+        color: white;
+      }
+
+      /* ── NAV HIGHLIGHT ── */
+      .section:target .section-header {
+        animation: highlight 0.6s ease;
+      }
+      @keyframes highlight {
+        0%,
+        100% {
+          background: transparent;
+        }
+        30% {
+          background: var(--blue-l);
+        }
+      }
+
+      /* ── BADGE ── */
+      .badge {
+        display: inline-block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: var(--blue-l);
+        color: var(--blue);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-tag">CC2005 · Semestre 01-2026</div>
+        <h1>Listas y Diccionarios en Python</h1>
+        <p>Material de estudio · Algoritmos y Programación Básica · UVG</p>
+      </div>
+    </header>
+
+    <!-- ── TAB BAR ── -->
+    <div class="tab-bar">
+      <button
+        class="tab-btn active-listas"
+        id="btn-listas"
+        onclick="switchTab('listas')"
+      >
+        <span class="tab-icon" style="background: #2563eb">L</span>
+        Listas
+      </button>
+      <button class="tab-btn" id="btn-dict" onclick="switchTab('dict')">
+        <span class="tab-icon" style="background: #7c3aed">D</span>
+        Diccionarios
+      </button>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TAB: LISTAS
+    ══════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-listas">
+      <div class="layout">
+        <!-- sidebar -->
+        <nav class="sidebar" id="sidebar-listas">
+          <div class="sidebar-title">Contenido</div>
+          <a href="#l-definicion" class="nav-item active">
+            <span class="nav-dot" style="background: #2563eb">1</span>
+            Definición
+          </a>
+          <a href="#l-operaciones" class="nav-item">
+            <span class="nav-dot" style="background: #3b82f6">2</span>
+            Operaciones básicas
+          </a>
+          <a href="#l-metodos" class="nav-item">
+            <span class="nav-dot" style="background: #1d4ed8">3</span> Métodos
+          </a>
+          <a href="#l-recorrer" class="nav-item">
+            <span class="nav-dot" style="background: #1e3a8a">4</span> Recorrer
+            listas
+          </a>
+        </nav>
+
+        <!-- main -->
+        <main class="main">
+          <!-- ══ L1. DEFINICIÓN ══ -->
+          <section class="section" id="l-definicion">
+            <div class="section-header">
+              <div class="section-num" style="background: #2563eb">1</div>
+              <h2>Definición</h2>
+            </div>
+            <p>
+              Una <strong>lista</strong> es una estructura que almacena una
+              colección de elementos ordenados. Cada elemento tiene un
+              <strong>índice</strong> asociado que comienza en
+              <strong>0</strong>.
+            </p>
+            <p>
+              A diferencia de las cadenas, las listas son
+              <strong>mutables</strong>: es posible modificar, agregar o
+              eliminar elementos directamente. Se definen con corchetes
+              <span class="badge">[]</span>.
+            </p>
+
+            <div class="callout callout-info">
+              <span class="callout-icon">📋</span>
+              <div>
+                Una lista <b>homogénea</b> contiene elementos del mismo tipo.
+                Una lista <b>heterogénea</b> mezcla distintos tipos de datos.
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="col-block">
+                <h4 style="color: #2563eb">Listas básicas</h4>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+lista_vacia <span class="op">=</span> []
+
+<span class="fn">print</span>(lista)        <span class="cm"># [1, 2, 3]</span>
+<span class="fn">print</span>(lista_vacia)  <span class="cm"># []</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #2563eb">Homogéneas y heterogéneas</h4>
+                <pre><code>homogenea1 <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+homogenea2 <span class="op">=</span> [<span class="st">"a"</span>, <span class="st">"e"</span>, <span class="st">"i"</span>, <span class="st">"o"</span>, <span class="st">"u"</span>]
+homogenea3 <span class="op">=</span> [<span class="nm">3.14</span>, <span class="nm">3.15</span>, <span class="nm">3.16</span>]
+homogenea4 <span class="op">=</span> [<span class="kw">True</span>, <span class="kw">False</span>]
+
+heterogenea <span class="op">=</span> [<span class="nm">1</span>, <span class="st">"a"</span>, <span class="nm">3.14</span>, <span class="kw">True</span>]</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ L2. OPERACIONES BÁSICAS ══ -->
+          <section class="section" id="l-operaciones">
+            <div class="section-header">
+              <div class="section-num" style="background: #3b82f6">2</div>
+              <h2>Operaciones básicas</h2>
+            </div>
+            <p>
+              Las listas soportan las mismas operaciones de acceso por índice,
+              slicing, concatenación y repetición que las cadenas, con la
+              ventaja de ser mutables.
+            </p>
+
+            <div class="two-col">
+              <div class="col-block">
+                <h4 style="color: #3b82f6">len() y acceso por índice</h4>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>]
+
+<span class="fn">print</span>(<span class="fn">len</span>(lista))   <span class="cm"># 6</span>
+<span class="fn">print</span>(lista[<span class="nm">0</span>])   <span class="cm"># 2</span>
+<span class="fn">print</span>(lista[<span class="op">-</span><span class="nm">1</span>])  <span class="cm"># 6</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #3b82f6">
+                  Concatenación (+) y repetición (*)
+                </h4>
+                <pre><code>a <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+b <span class="op">=</span> [<span class="nm">4</span>, <span class="nm">5</span>]
+
+<span class="fn">print</span>(a <span class="op">+</span> b)   <span class="cm"># [1, 2, 3, 4, 5]</span>
+<span class="fn">print</span>([<span class="nm">0</span>] <span class="op">*</span> <span class="nm">4</span>) <span class="cm"># [0, 0, 0, 0]</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #3b82f6">Slicing</h4>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>]
+
+sub <span class="op">=</span> lista[<span class="nm">1</span>:<span class="nm">3</span>]
+<span class="fn">print</span>(sub)   <span class="cm"># [2, 3]</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #3b82f6">Modificar elemento por índice</h4>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>]
+
+lista[<span class="nm">0</span>] <span class="op">=</span> <span class="nm">1</span>
+
+<span class="fn">print</span>(lista)  <span class="cm"># [1, 2, 3, 4]</span></code></pre>
+              </div>
+            </div>
+
+            <div class="callout callout-tip">
+              <span class="callout-icon">💡</span>
+              <div>
+                La asignación por slice permite reemplazar varios elementos a la
+                vez:
+                <code
+                  style="
+                    background: var(--blue-l);
+                    color: var(--blue);
+                    padding: 1px 5px;
+                    border-radius: 4px;
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                  "
+                  >lista[1:4] = [8, 9, 10]</code
+                >
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ L3. MÉTODOS ══ -->
+          <section class="section" id="l-metodos">
+            <div class="section-header">
+              <div class="section-num" style="background: #1d4ed8">3</div>
+              <h2>Métodos</h2>
+            </div>
+            <p>
+              Las listas tienen métodos integrados. A diferencia de los métodos
+              de cadena, muchos de estos
+              <strong>modifican la lista original</strong> en lugar de retornar
+              una nueva. Referencia completa:
+              <a
+                href="https://docs.python.org/3/tutorial/datastructures.html#more-on-lists"
+                target="_blank"
+                style="color: var(--blue)"
+                >docs.python.org</a
+              >.
+            </p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Método / Función</th>
+                  <th>¿Qué hace?</th>
+                  <th>Modifica original</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>len(lista)</code></td>
+                  <td>Número de elementos</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><code>.append(x)</code></td>
+                  <td>Agrega x al final</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.insert(i, x)</code></td>
+                  <td>Inserta x en posición i</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.remove(x)</code></td>
+                  <td>Elimina la primera aparición de x</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.pop()</code></td>
+                  <td>Elimina y retorna el último elemento</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>del lista[i]</code></td>
+                  <td>Elimina elemento en índice i</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.clear()</code></td>
+                  <td>Vacía la lista</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.sort()</code></td>
+                  <td>Ordena ascendente</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.sort(reverse=True)</code></td>
+                  <td>Ordena descendente</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.extend(lista2)</code></td>
+                  <td>Agrega todos los elementos de lista2</td>
+                  <td>Sí</td>
+                </tr>
+                <tr>
+                  <td><code>.index(x)</code></td>
+                  <td>Índice de la primera aparición de x</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><code>list(cadena)</code></td>
+                  <td>Convierte cadena a lista de caracteres</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><code>cadena.split(sep)</code></td>
+                  <td>Divide cadena en lista por separador</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><code>sep.join(lista)</code></td>
+                  <td>Une lista en cadena con separador</td>
+                  <td>No</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Agregar y eliminar elementos</h3>
+            <div class="method-grid">
+              <div class="method-card">
+                <div class="method-card-header">.append()</div>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+lista<span class="at">.append</span>(<span class="nm">4</span>)
+<span class="fn">print</span>(lista)  <span class="cm"># [1, 2, 3, 4]</span></code></pre>
+              </div>
+              <div class="method-card">
+                <div class="method-card-header">.insert(i, x)</div>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+lista<span class="at">.insert</span>(<span class="nm">1</span>, <span class="nm">99</span>)
+<span class="fn">print</span>(lista)  <span class="cm"># [1, 99, 2, 3]</span></code></pre>
+              </div>
+              <div class="method-card">
+                <div class="method-card-header">.remove(x)</div>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">2</span>, <span class="nm">4</span>]
+lista<span class="at">.remove</span>(<span class="nm">2</span>)
+<span class="fn">print</span>(lista)  <span class="cm"># [1, 3, 2, 4]</span></code></pre>
+              </div>
+              <div class="method-card">
+                <div class="method-card-header">.pop() y del</div>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+valor <span class="op">=</span> lista<span class="at">.pop</span>()
+<span class="fn">print</span>(valor)  <span class="cm"># 3</span>
+<span class="fn">print</span>(lista)  <span class="cm"># [1, 2]</span>
+
+<span class="kw">del</span> lista[<span class="nm">0</span>]
+<span class="fn">print</span>(lista)  <span class="cm"># [2]</span></code></pre>
+              </div>
+            </div>
+
+            <h3>Ordenar y combinar</h3>
+            <div class="method-grid">
+              <div class="method-card">
+                <div class="method-card-header">
+                  .sort() y .sort(reverse=True)
+                </div>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">5</span>, <span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">3</span>]
+lista<span class="at">.sort</span>()
+<span class="fn">print</span>(lista)  <span class="cm"># [1, 3, 4, 5]</span>
+
+lista<span class="at">.sort</span>(reverse<span class="op">=</span><span class="kw">True</span>)
+<span class="fn">print</span>(lista)  <span class="cm"># [5, 4, 3, 1]</span></code></pre>
+              </div>
+              <div class="method-card">
+                <div class="method-card-header">.extend()</div>
+                <pre><code>lista <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+lista2 <span class="op">=</span> [<span class="nm">4</span>, <span class="nm">5</span>]
+lista<span class="at">.extend</span>(lista2)
+<span class="fn">print</span>(lista)
+<span class="cm"># [1, 2, 3, 4, 5]</span></code></pre>
+              </div>
+            </div>
+
+            <h3>Cadenas ↔ Listas</h3>
+            <div class="method-grid">
+              <div class="method-card">
+                <div class="method-card-header">list() — cadena a lista</div>
+                <pre><code>cadena <span class="op">=</span> <span class="st">"Hello"</span>
+nueva <span class="op">=</span> <span class="fn">list</span>(cadena)
+<span class="fn">print</span>(nueva)
+<span class="cm"># ['H', 'e', 'l', 'l', 'o']</span></code></pre>
+              </div>
+              <div class="method-card">
+                <div class="method-card-header">.split() y .join()</div>
+                <pre><code>palabras <span class="op">=</span> <span class="st">"Hola Mundo Python"</span><span class="at">.split</span>(<span class="st">" "</span>)
+<span class="fn">print</span>(palabras)
+<span class="cm"># ['Hola', 'Mundo', 'Python']</span>
+
+unido <span class="op">=</span> <span class="st">" "</span><span class="at">.join</span>(palabras)
+<span class="fn">print</span>(unido)
+<span class="cm"># Hola Mundo Python</span></code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ L4. RECORRER ══ -->
+          <section class="section" id="l-recorrer">
+            <div class="section-header">
+              <div class="section-num" style="background: #1e3a8a">4</div>
+              <h2>Recorrer listas</h2>
+            </div>
+            <p>
+              Las listas son <strong>iterables</strong>: se pueden recorrer
+              elemento por elemento con <em>for</em> o con <em>while</em> usando
+              índice.
+            </p>
+
+            <div class="two-col">
+              <div class="col-block">
+                <h4 style="color: #1e3a8a">Con for (sin índice)</h4>
+                <pre><code>lista <span class="op">=</span> [<span class="st">"uno"</span>, <span class="st">"dos"</span>, <span class="st">"tres"</span>]
+
+<span class="kw">for</span> elemento <span class="kw">in</span> lista:
+    <span class="fn">print</span>(elemento)
+
+<span class="cm"># uno</span>
+<span class="cm"># dos</span>
+<span class="cm"># tres</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #1e3a8a">Con while (usando índice)</h4>
+                <pre><code>lista <span class="op">=</span> [<span class="st">"uno"</span>, <span class="st">"dos"</span>, <span class="st">"tres"</span>]
+indice <span class="op">=</span> <span class="nm">0</span>
+
+<span class="kw">while</span> indice <span class="op">&lt;</span> <span class="fn">len</span>(lista):
+    <span class="fn">print</span>(lista[indice])
+    indice <span class="op">+=</span> <span class="nm">1</span></code></pre>
+              </div>
+            </div>
+
+            <div class="callout callout-tip">
+              <span class="callout-icon">💡</span>
+              <div>
+                Usa <strong>for</strong> cuando solo necesitas el valor. Usa
+                <strong>while con índice</strong> cuando también necesitas la
+                posición del elemento mientras iteras.
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TAB: DICCIONARIOS
+    ══════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-dict">
+      <div class="layout">
+        <!-- sidebar -->
+        <nav class="sidebar" id="sidebar-dict">
+          <div class="sidebar-title">Contenido</div>
+          <a href="#d-definicion" class="nav-item active">
+            <span class="nav-dot" style="background: #7c3aed">1</span>
+            Definición
+          </a>
+          <a href="#d-crud" class="nav-item">
+            <span class="nav-dot" style="background: #6d28d9">2</span> Modificar
+            / Agregar / Eliminar
+          </a>
+          <a href="#d-metodos" class="nav-item">
+            <span class="nav-dot" style="background: #4c1d95">3</span> Métodos
+          </a>
+          <a href="#d-errores" class="nav-item">
+            <span class="nav-dot" style="background: #dc2626">4</span> Errores
+            comunes
+          </a>
+        </nav>
+
+        <!-- main -->
+        <main class="main">
+          <!-- ══ D1. DEFINICIÓN ══ -->
+          <section class="section" id="d-definicion">
+            <div class="section-header">
+              <div class="section-num" style="background: #7c3aed">1</div>
+              <h2>Definición</h2>
+            </div>
+            <p>
+              Un <strong>diccionario</strong> es una estructura de datos que
+              almacena pares <strong>llave: valor</strong>. También se conocen
+              como <em>matrices asociativas</em>. Se definen con llaves
+              <span class="badge">{}</span>.
+            </p>
+            <p>
+              Los diccionarios son <strong>mutables</strong> — se pueden
+              modificar sus valores. Sin embargo, las
+              <strong>llaves son inmutables</strong>: una vez definidas no
+              pueden cambiar.
+            </p>
+
+            <div class="callout callout-info">
+              <span class="callout-icon">🔑</span>
+              <div>
+                Cada llave actúa como un identificador único del valor, de forma
+                más "natural" que un índice numérico. Las llaves deben ser
+                únicas dentro del mismo diccionario.
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="col-block">
+                <h4 style="color: #7c3aed">Crear un diccionario</h4>
+                <pre><code>diccionario <span class="op">=</span> {
+    <span class="st">"codigo"</span>: <span class="st">"cc2005"</span>,
+    <span class="st">"nombre"</span>: <span class="st">"Algoritmos"</span>,
+    <span class="st">"creditos"</span>: <span class="nm">6</span>
+}
+
+<span class="fn">print</span>(diccionario)
+<span class="fn">print</span>(diccionario[<span class="st">"codigo"</span>])
+<span class="cm"># cc2005</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #7c3aed">Valor de tipo lista</h4>
+                <pre><code>diccionario <span class="op">=</span> {
+    <span class="st">"carnet"</span>: <span class="st">"123456"</span>,
+    <span class="st">"notas"</span>: [<span class="nm">100</span>, <span class="nm">90</span>, <span class="nm">80</span>, <span class="nm">100</span>]
+}
+
+<span class="fn">print</span>(diccionario[<span class="st">"notas"</span>])
+<span class="cm"># [100, 90, 80, 100]</span></code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ D2. CRUD ══ -->
+          <section class="section" id="d-crud">
+            <div class="section-header">
+              <div class="section-num" style="background: #6d28d9">2</div>
+              <h2>Modificar, agregar y eliminar</h2>
+            </div>
+
+            <div class="two-col">
+              <div class="col-block">
+                <h4 style="color: #6d28d9">Modificar un valor existente</h4>
+                <pre><code>dic <span class="op">=</span> {
+    <span class="st">"codigo"</span>: <span class="st">"cc2005"</span>,
+    <span class="st">"creditos"</span>: <span class="nm">6</span>
+}
+
+dic[<span class="st">"creditos"</span>] <span class="op">=</span> <span class="nm">4</span>
+
+<span class="fn">print</span>(dic)
+<span class="cm"># {'codigo': 'cc2005', 'creditos': 4}</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #6d28d9">Agregar una nueva llave</h4>
+                <pre><code>dic <span class="op">=</span> {
+    <span class="st">"codigo"</span>: <span class="st">"cc2005"</span>,
+    <span class="st">"creditos"</span>: <span class="nm">6</span>
+}
+
+dic[<span class="st">"catedratico"</span>] <span class="op">=</span> <span class="st">"Ludwing Cano"</span>
+
+<span class="fn">print</span>(dic)
+<span class="cm"># {'codigo': 'cc2005', 'creditos': 6,</span>
+<span class="cm">#  'catedratico': 'Ludwing Cano'}</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #6d28d9">Eliminar con del</h4>
+                <pre><code>dic <span class="op">=</span> {
+    <span class="st">"codigo"</span>: <span class="st">"cc2005"</span>,
+    <span class="st">"nombre"</span>: <span class="st">"Algoritmos"</span>,
+    <span class="st">"creditos"</span>: <span class="nm">6</span>
+}
+
+<span class="kw">del</span> dic[<span class="st">"creditos"</span>]
+
+<span class="fn">print</span>(dic)
+<span class="cm"># {'codigo': 'cc2005', 'nombre': 'Algoritmos'}</span></code></pre>
+              </div>
+              <div class="col-block">
+                <h4 style="color: #6d28d9">Verificar si existe una llave</h4>
+                <pre><code>dic <span class="op">=</span> {<span class="st">"nombre"</span>: <span class="st">"Ana"</span>, <span class="st">"edad"</span>: <span class="nm">20</span>}
+
+<span class="fn">print</span>(<span class="st">"nombre"</span> <span class="kw">in</span> dic)   <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="st">"seccion"</span> <span class="kw">in</span> dic)  <span class="cm"># False</span></code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ D3. MÉTODOS ══ -->
+          <section class="section" id="d-metodos">
+            <div class="section-header">
+              <div class="section-num" style="background: #4c1d95">3</div>
+              <h2>Métodos</h2>
+            </div>
+            <p>
+              Los diccionarios tienen métodos para acceder a sus llaves, valores
+              y combinar diccionarios. Referencia completa:
+              <a
+                href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries"
+                target="_blank"
+                style="color: var(--blue)"
+                >docs.python.org</a
+              >.
+            </p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Método</th>
+                  <th>¿Qué hace?</th>
+                  <th>Ejemplo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>dic["llave"]</code></td>
+                  <td>Accede al valor (lanza error si no existe)</td>
+                  <td><code>dic["codigo"]</code></td>
+                </tr>
+                <tr>
+                  <td><code>.get(llave)</code></td>
+                  <td>Accede al valor (retorna None si no existe)</td>
+                  <td><code>dic.get("codigo")</code></td>
+                </tr>
+                <tr>
+                  <td><code>.get(llave, default)</code></td>
+                  <td>Retorna default si la llave no existe</td>
+                  <td><code>dic.get("seccion", -1)</code></td>
+                </tr>
+                <tr>
+                  <td><code>.keys()</code></td>
+                  <td>Retorna todas las llaves del diccionario</td>
+                  <td><code>dic.keys()</code></td>
+                </tr>
+                <tr>
+                  <td><code>.values()</code></td>
+                  <td>Retorna todos los valores del diccionario</td>
+                  <td><code>dic.values()</code></td>
+                </tr>
+                <tr>
+                  <td><code>.update(dic2)</code></td>
+                  <td>Combina dic2 en el diccionario actual</td>
+                  <td><code>dic.update(dic2)</code></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Acceso a valores</h3>
+            <div class="method-grid">
+              <div class="method-card">
+                <div class="method-card-header">
+                  .get() y .get() con default
+                </div>
+                <pre><code>dic <span class="op">=</span> {
+    <span class="st">"codigo"</span>: <span class="st">"cc2005"</span>,
+    <span class="st">"creditos"</span>: <span class="nm">6</span>
+}
+
+<span class="fn">print</span>(dic<span class="at">.get</span>(<span class="st">"codigo"</span>))      <span class="cm"># cc2005</span>
+<span class="fn">print</span>(dic<span class="at">.get</span>(<span class="st">"seccion"</span>, <span class="op">-</span><span class="nm">1</span>)) <span class="cm"># -1</span></code></pre>
+              </div>
+              <div class="method-card">
+                <div class="method-card-header">.keys() y .values()</div>
+                <pre><code>dic <span class="op">=</span> {<span class="st">"codigo"</span>: <span class="st">"cc2005"</span>, <span class="st">"creditos"</span>: <span class="nm">6</span>}
+
+llaves <span class="op">=</span> <span class="fn">list</span>(dic<span class="at">.keys</span>())
+valores <span class="op">=</span> <span class="fn">list</span>(dic<span class="at">.values</span>())
+
+<span class="fn">print</span>(llaves)   <span class="cm"># ['codigo', 'creditos']</span>
+<span class="fn">print</span>(valores)  <span class="cm"># ['cc2005', 6]</span></code></pre>
+              </div>
+            </div>
+
+            <h3>Combinar diccionarios</h3>
+            <div class="method-grid">
+              <div class="method-card">
+                <div class="method-card-header">.update()</div>
+                <pre><code>dic <span class="op">=</span> {
+    <span class="st">"codigo"</span>: <span class="st">"cc2005"</span>,
+    <span class="st">"creditos"</span>: <span class="nm">6</span>
+}
+dic2 <span class="op">=</span> {
+    <span class="st">"seccion"</span>: <span class="nm">600</span>,
+    <span class="st">"catedratico"</span>: <span class="st">"Ludwing Cano"</span>
+}
+
+dic<span class="at">.update</span>(dic2)
+
+<span class="fn">print</span>(dic)
+<span class="cm"># {'codigo': 'cc2005', 'creditos': 6,</span>
+<span class="cm">#  'seccion': 600, 'catedratico': 'Ludwing Cano'}</span></code></pre>
+              </div>
+            </div>
+
+            <div class="callout callout-tip">
+              <span class="callout-icon">💡</span>
+              <div>
+                Prefiere <strong>.get()</strong> sobre el acceso directo
+                <code
+                  style="
+                    background: var(--blue-l);
+                    color: var(--blue);
+                    padding: 1px 5px;
+                    border-radius: 4px;
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                  "
+                  >dic["llave"]</code
+                >
+                cuando no estés seguro de si la llave existe — evita errores en
+                tiempo de ejecución.
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ D4. ERRORES ══ -->
+          <section class="section" id="d-errores">
+            <div class="section-header">
+              <div class="section-num" style="background: #dc2626">4</div>
+              <h2>Errores comunes</h2>
+            </div>
+
+            <div class="error-card">
+              <div class="error-header">
+                <div class="error-dot"></div>
+                <span>Acceder a una llave que no existe</span>
+                <small>KeyError si la llave no está en el diccionario</small>
+              </div>
+              <div class="error-body">
+                <pre><code><span class="cm"># ❌ KeyError: 'seccion'</span>
+dic <span class="op">=</span> {<span class="st">"codigo"</span>: <span class="st">"cc2005"</span>, <span class="st">"creditos"</span>: <span class="nm">6</span>}
+<span class="fn">print</span>(dic[<span class="st">"seccion"</span>])
+
+<span class="cm"># ✅ Correcto: usar .get() con valor por defecto</span>
+<span class="fn">print</span>(dic<span class="at">.get</span>(<span class="st">"seccion"</span>, <span class="st">"No disponible"</span>))
+<span class="cm"># No disponible</span>
+
+<span class="cm"># ✅ O verificar con in antes de acceder</span>
+<span class="kw">if</span> <span class="st">"seccion"</span> <span class="kw">in</span> dic:
+    <span class="fn">print</span>(dic[<span class="st">"seccion"</span>])</code></pre>
+              </div>
+            </div>
+
+            <div class="error-card">
+              <div class="error-header">
+                <div class="error-dot"></div>
+                <span>Confundir append() con agregar una llave</span>
+                <small
+                  >Los diccionarios no tienen .append() — se asigna
+                  directamente</small
+                >
+              </div>
+              <div class="error-body">
+                <pre><code><span class="cm"># ❌ AttributeError: 'dict' object has no attribute 'append'</span>
+dic <span class="op">=</span> {<span class="st">"nombre"</span>: <span class="st">"Ana"</span>}
+dic<span class="at">.append</span>(<span class="st">"edad"</span>, <span class="nm">20</span>)
+
+<span class="cm"># ✅ Correcto: asignar una nueva llave directamente</span>
+dic[<span class="st">"edad"</span>] <span class="op">=</span> <span class="nm">20</span>
+<span class="fn">print</span>(dic)  <span class="cm"># {'nombre': 'Ana', 'edad': 20}</span></code></pre>
+              </div>
+            </div>
+
+            <div class="error-card">
+              <div class="error-header">
+                <div class="error-dot"></div>
+                <span>Usar una llave mutable (como lista) como llave</span>
+                <small>Las llaves deben ser inmutables → TypeError</small>
+              </div>
+              <div class="error-body">
+                <pre><code><span class="cm"># ❌ TypeError: unhashable type: 'list'</span>
+dic <span class="op">=</span> {[<span class="nm">1</span>, <span class="nm">2</span>]: <span class="st">"valor"</span>}
+
+<span class="cm"># ✅ Correcto: usar tipos inmutables como llave</span>
+dic <span class="op">=</span> {(<span class="nm">1</span>, <span class="nm">2</span>): <span class="st">"valor"</span>}   <span class="cm"># tuple como llave</span>
+dic <span class="op">=</span> {<span class="st">"clave"</span>: <span class="st">"valor"</span>}   <span class="cm"># string como llave</span></code></pre>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <strong>CC2005 — Algoritmos y Programación Básica</strong> · Universidad
+      del Valle de Guatemala · Semestre 01-2026
+    </footer>
+
+    <script>
+      function switchTab(tab) {
+        // panels
+        document
+          .getElementById("panel-listas")
+          .classList.toggle("active", tab === "listas");
+        document
+          .getElementById("panel-dict")
+          .classList.toggle("active", tab === "dict");
+
+        // buttons
+        const btnL = document.getElementById("btn-listas");
+        const btnD = document.getElementById("btn-dict");
+        btnL.className = "tab-btn" + (tab === "listas" ? " active-listas" : "");
+        btnD.className = "tab-btn" + (tab === "dict" ? " active-dict" : "");
+      }
+
+      // Intersection observer per panel
+      function setupObserver(panelId, sidebarId) {
+        const panel = document.getElementById(panelId);
+        const navItems = document.querySelectorAll(`#${sidebarId} .nav-item`);
+        const sections = panel.querySelectorAll(".section");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                navItems.forEach((n) => n.classList.remove("active"));
+                const active = document.querySelector(
+                  `#${sidebarId} .nav-item[href="#${e.target.id}"]`,
+                );
+                if (active) active.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.3 },
+        );
+
+        sections.forEach((s) => observer.observe(s));
+      }
+
+      setupObserver("panel-listas", "sidebar-listas");
+      setupObserver("panel-dict", "sidebar-dict");
+    </script>
+  </body>
+</html>

@@ -41,11 +41,9 @@ export const presentations = [
     image: "./assets/10-diccionarios.png",
     links: {
       ver: "./presentations/10-diccionarios.html",
-      pdf: "./pdf/10-diccionarios.pdf",
-      md: "./md/10-diccionarios.md",
-      ejemplos: REPO_TREE("07 - Diccionarios"),
+      ejemplos: "./presentations/09-10-ejemplos-listas-diccionarios.html",
     },
-    active: false,
+    active: true,
   },
   {
     id: 9,
@@ -53,11 +51,9 @@ export const presentations = [
     image: "./assets/09-listas.png",
     links: {
       ver: "./presentations/09-listas.html",
-      pdf: "./pdf/09-listas.pdf",
-      md: "./md/09-listas.md",
-      ejemplos: REPO_TREE("06 - Listas"),
+      ejemplos: "./presentations/09-10-ejemplos-listas-diccionarios.htmll",
     },
-    active: false,
+    active: true,
   },
   {
     id: 8,
