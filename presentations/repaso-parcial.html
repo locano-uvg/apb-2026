@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Parcial 2 - CC2005 UVG</title>
+    <title>Parcial en Línea - CC2005 UVG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
         
@@ -387,6 +387,45 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
+
+        .question-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .question-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+
+        .question-type-badge.type-mcq {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--info);
+            border: 1px solid rgba(88, 166, 255, 0.35);
+        }
+
+        .question-type-badge.type-direct {
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(210, 153, 34, 0.35);
+        }
+
+        .question-type-badge.type-analysis {
+            background: rgba(163, 113, 247, 0.15);
+            color: #a371f7;
+            border: 1px solid rgba(163, 113, 247, 0.35);
+        }
         
         .question-text {
             font-size: 1.2rem;
@@ -708,6 +747,295 @@
             font-family: 'JetBrains Mono', monospace;
         }
         
+        /* Student Form */
+        .student-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--uvg-green);
+        }
+
+        /* Exam Instructions */
+        .exam-instructions {
+            background: rgba(58, 125, 40, 0.08);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--uvg-green);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .exam-instructions h3 {
+            color: var(--uvg-green);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .exam-instructions ul {
+            color: var(--text-secondary);
+            padding-left: 1.25rem;
+            line-height: 1.9;
+        }
+
+        .exam-instructions li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* Section Navigation */
+        .section-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-tab {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .section-tab:hover {
+            border-color: var(--uvg-green);
+        }
+
+        .section-tab.active {
+            border-color: var(--uvg-green);
+            background: rgba(58, 125, 40, 0.12);
+        }
+
+        .section-tab.completed {
+            border-color: rgba(63, 185, 80, 0.5);
+        }
+
+        .section-tab-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--uvg-green);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .section-tab-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .section-tab-points {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .section-tab .question-type-badge {
+            margin-top: 0.5rem;
+            font-size: 0.65rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--uvg-green);
+        }
+
+        .section-badge {
+            background: var(--uvg-gray);
+            color: var(--uvg-green);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .section-instructions {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .section-instructions strong {
+            color: var(--uvg-green);
+        }
+
+        /* Open Questions */
+        .open-question {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .open-question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .open-question-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .open-question-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--uvg-green);
+            font-weight: 700;
+        }
+
+        .open-question-points {
+            font-size: 0.8rem;
+            color: var(--warning);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .open-question-text {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .answer-area {
+            width: 100%;
+            min-height: 180px;
+            padding: 1rem;
+            background: var(--uvg-gray-dark);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-area:focus {
+            outline: none;
+            border-color: var(--uvg-green);
+        }
+
+        .answer-area::placeholder {
+            color: var(--text-muted);
+        }
+
+        .answer-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .analysis-fields {
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .analysis-fields .answer-area {
+            min-height: 120px;
+        }
+
+        .analysis-fields .answer-area.code-fix {
+            min-height: 200px;
+        }
+
+        /* Exam Banner */
+        .exam-banner {
+            background: linear-gradient(135deg, rgba(58, 125, 40, 0.15), rgba(51, 63, 72, 0.2));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .exam-banner-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .banner-item {
+            font-size: 0.9rem;
+        }
+
+        .banner-item span {
+            color: var(--text-muted);
+        }
+
+        .banner-item strong {
+            color: var(--text-primary);
+        }
+
+        /* Print */
+        @media print {
+            body::before { display: none; }
+            .button-group, .section-nav, .stats-bar, .progress-container { display: none !important; }
+            .card { break-inside: avoid; box-shadow: none; }
+            .answer-area { border: 1px solid #ccc; min-height: 150px; }
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -739,6 +1067,15 @@
                 grid-template-columns: 1fr;
             }
             
+            .section-nav {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
             .results-score {
                 font-size: 3.5rem;
             }
@@ -750,151 +1087,237 @@
         <header>
             <div class="logo">
                 <span class="logo-uvg">UVG</span> 
-                <span class="logo-text">PARCIAL 2</span>
+                <span class="logo-text">PARCIAL EN LÍNEA</span>
             </div>
-            <div class="subtitle">Simulador de Práctica • Algoritmos y Programación Básica</div>
+            <div class="subtitle">Algoritmos y Programación Básica • Evaluación Parcial</div>
             <div class="course-code">CC2005 • Semestre 01-2026</div>
         </header>
 
         <!-- Start Screen -->
         <div id="startScreen" class="card start-screen">
-            <div class="start-icon">🎯</div>
-            <h1 class="start-title">¡Prepárate para el Parcial!</h1>
+            <div class="start-icon">📝</div>
+            <h1 class="start-title">Parcial en Línea</h1>
             <p class="start-description">
-                Practica con preguntas reales basadas en el material oficial de CC2005. 
-                Elige cuántas preguntas quieres resolver y obtén retroalimentación inmediata.
+                Complete sus datos y lea las instrucciones antes de iniciar. 
+                El parcial consta de tres secciones: selección múltiple, preguntas directas y análisis de código.
             </p>
-            
-            <h3 style="color: var(--uvg-green); margin-bottom: 1rem; font-size: 1.3rem;">
-                ¿Cuántas preguntas quieres practicar?
-            </h3>
-            
-            <div class="question-selector">
-                <div class="selector-option selected" data-count="10" onclick="selectQuestionCount(10)">
-                    <div class="selector-number">10</div>
-                    <div class="selector-label">Preguntas</div>
+
+            <div class="student-form">
+                <div class="form-group">
+                    <label for="studentName">Nombre completo</label>
+                    <input type="text" id="studentName" placeholder="Ej: Juan Pérez López" required>
                 </div>
-                <div class="selector-option" data-count="20" onclick="selectQuestionCount(20)">
-                    <div class="selector-number">20</div>
-                    <div class="selector-label">Preguntas</div>
+                <div class="form-group">
+                    <label for="studentId">Carné</label>
+                    <input type="text" id="studentId" placeholder="Ej: 24001234" required>
                 </div>
-                <div class="selector-option" data-count="30" onclick="selectQuestionCount(30)">
-                    <div class="selector-number">30</div>
-                    <div class="selector-label">Preguntas</div>
+                <div class="form-group">
+                    <label for="studentSection">Sección</label>
+                    <input type="text" id="studentSection" placeholder="Ej: A" required>
                 </div>
             </div>
-            
+
+            <div class="exam-instructions">
+                <h3>Instrucciones generales</h3>
+                <ul>
+                    <li>Tiempo total: <strong>90 minutos</strong>. El parcial se enviará automáticamente al agotarse el tiempo.</li>
+                    <li><strong>Sección I — Selección múltiple (15 pts):</strong> Seleccione la respuesta correcta para cada pregunta.</li>
+                    <li><strong>Sección II — Preguntas directas (15 pts):</strong> Escriba el código Python solicitado en cada espacio de respuesta.</li>
+                    <li><strong>Sección III — Análisis de código (20 pts):</strong> Lea el código, explique qué hace, identifique el error y escriba la versión corregida.</li>
+                    <li>Puede navegar entre secciones y modificar sus respuestas antes de enviar el parcial.</li>
+                    <li>No se muestra retroalimentación durante el examen. El docente calificará las respuestas abiertas.</li>
+                </ul>
+            </div>
+
             <div class="features">
                 <div class="feature">
-                    <div class="feature-icon">📚</div>
-                    <div class="feature-title">Material Oficial</div>
-                    <div class="feature-description">Basado en las presentaciones de repeticiones, funciones, cadenas, listas y diccionarios</div>
+                    <div class="feature-icon">📋</div>
+                    <div class="feature-title">Sección I</div>
+                    <div class="feature-description">15 preguntas de selección múltiple sobre repeticiones, funciones, cadenas, listas y diccionarios</div>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">⏱️</div>
-                    <div class="feature-title">Tiempo Real</div>
-                    <div class="feature-description">Simula el tiempo del examen real para prepararte mejor</div>
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-title">Sección II</div>
+                    <div class="feature-description">3 preguntas directas: escriba código Python completo en el espacio provisto</div>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">💡</div>
-                    <div class="feature-title">Retroalimentación</div>
-                    <div class="feature-description">Explicaciones detalladas para cada respuesta</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-title">Práctica Ilimitada</div>
-                    <div class="feature-description">Reinicia y practica cuantas veces necesites</div>
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Sección III</div>
+                    <div class="feature-description">2 ejercicios de análisis: interprete, detecte el error y corrija el código</div>
                 </div>
             </div>
             
             <div class="button-group">
                 <button class="btn btn-primary" onclick="startExam()">
-                    <span>🚀 Comenzar Práctica</span>
+                    <span>Iniciar Parcial</span>
                 </button>
             </div>
         </div>
 
         <!-- Exam Screen -->
         <div id="examScreen" class="hidden">
-            <!-- Stats Bar -->
-            <div class="stats-bar">
-                <div class="stat-card">
-                    <div class="stat-label">Pregunta</div>
-                    <div class="stat-value" id="currentQuestion">1</div>
+            <!-- Exam Banner -->
+            <div class="exam-banner">
+                <div class="exam-banner-info">
+                    <div class="banner-item"><span>Estudiante:</span> <strong id="bannerName">—</strong></div>
+                    <div class="banner-item"><span>Carné:</span> <strong id="bannerId">—</strong></div>
+                    <div class="banner-item"><span>Sección:</span> <strong id="bannerSection">—</strong></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Progreso</div>
-                    <div class="stat-value" id="progress">0%</div>
+                <div class="banner-item"><span>Tiempo restante:</span> <strong class="timer-value" id="timer">90:00</strong></div>
+            </div>
+
+            <!-- Section Navigation -->
+            <div class="section-nav">
+                <div class="section-tab active" id="tab-section1" onclick="goToSection(1)">
+                    <div class="section-tab-number">Sección I</div>
+                    <div class="section-tab-title">Selección Múltiple</div>
+                    <span class="question-type-badge type-mcq">Selección múltiple</span>
+                    <div class="section-tab-points">15 pts • 15 preguntas</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Correctas</div>
-                    <div class="stat-value" id="correctCount">0</div>
+                <div class="section-tab" id="tab-section2" onclick="goToSection(2)">
+                    <div class="section-tab-number">Sección II</div>
+                    <div class="section-tab-title">Preguntas Directas</div>
+                    <span class="question-type-badge type-direct">Pregunta directa</span>
+                    <div class="section-tab-points">15 pts • 3 preguntas</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Tiempo</div>
-                    <div class="stat-value timer-value" id="timer">20:00</div>
+                <div class="section-tab" id="tab-section3" onclick="goToSection(3)">
+                    <div class="section-tab-number">Sección III</div>
+                    <div class="section-tab-title">Análisis de Código</div>
+                    <span class="question-type-badge type-analysis">Análisis de código</span>
+                    <div class="section-tab-points">20 pts • 2 preguntas</div>
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            <!-- Section I: Multiple Choice -->
+            <div id="section1" class="exam-section">
+                <div class="section-instructions" style="margin-bottom: 1.5rem;">
+                    <span class="question-type-badge type-mcq">Selección múltiple</span>
+                    <span style="margin-left: 0.75rem; color: var(--text-secondary);">Seleccione la opción correcta para cada pregunta.</span>
+                </div>
+                <div class="stats-bar">
+                    <div class="stat-card">
+                        <div class="stat-label">Pregunta</div>
+                        <div class="stat-value" id="currentQuestion">1</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Progreso</div>
+                        <div class="stat-value" id="progress">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Respondidas</div>
+                        <div class="stat-value" id="answeredCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Sección</div>
+                        <div class="stat-value" style="font-size: 1.2rem;">I</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+
+                <div class="card question-card" id="questionCard"></div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn">
+                        <span>← Anterior</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">
+                        <span>Siguiente →</span>
+                    </button>
+                    <button class="btn btn-primary hidden" onclick="goToSection(2)" id="section1NextBtn">
+                        <span>Ir a Sección II →</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- Question Card -->
-            <div class="card question-card" id="questionCard">
-                <!-- Question content will be inserted here -->
+            <!-- Section II: Direct Questions -->
+            <div id="section2" class="exam-section hidden">
+                <div class="card">
+                    <div class="section-header">
+                        <div class="section-title">Sección II — Preguntas Directas</div>
+                        <div class="section-badge">15 puntos</div>
+                    </div>
+                    <div class="section-instructions">
+                        <span class="question-type-badge type-direct">Pregunta directa</span>
+                        <strong style="margin-left: 0.75rem;">Instrucciones:</strong> Escriba el código Python completo que resuelva cada problema en el espacio de respuesta. 
+                        Su código debe ser funcional y seguir las convenciones vistas en clase.
+                    </div>
+                    <div id="directQuestionsContainer"></div>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goToSection(1)">
+                        <span>← Sección I</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="goToSection(3)">
+                        <span>Ir a Sección III →</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- Navigation Buttons -->
-            <div class="button-group">
-                <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn">
-                    <span>⬅ Anterior</span>
-                </button>
-                <button class="btn btn-primary" onclick="checkAnswer()" id="checkBtn">
-                    <span>✓ Verificar Respuesta</span>
-                </button>
-                <button class="btn btn-primary hidden" onclick="nextQuestion()" id="nextBtn">
-                    <span>Siguiente ➡</span>
-                </button>
-                <button class="btn btn-primary hidden" onclick="finishExam()" id="finishBtn">
-                    <span>🏁 Finalizar Examen</span>
-                </button>
+            <!-- Section III: Code Analysis -->
+            <div id="section3" class="exam-section hidden">
+                <div class="card">
+                    <div class="section-header">
+                        <div class="section-title">Sección III — Análisis de Código</div>
+                        <div class="section-badge">20 puntos</div>
+                    </div>
+                    <div class="section-instructions">
+                        <span class="question-type-badge type-analysis">Análisis de código</span>
+                        <strong style="margin-left: 0.75rem;">Instrucciones:</strong> Lea e interprete el siguiente código. Explique qué hace, identifique por qué la salida no es la esperada y escríbalo correctamente.
+                    </div>
+                    <div id="codeAnalysisContainer"></div>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goToSection(2)">
+                        <span>← Sección II</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="confirmSubmit()">
+                        <span>Enviar Parcial</span>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Results Screen -->
         <div id="resultsScreen" class="hidden">
             <div class="card results-card">
-                <div class="results-icon" id="resultIcon">🎉</div>
+                <div class="results-icon" id="resultIcon">✅</div>
                 <h2 style="color: var(--uvg-green); font-size: 2rem; margin-bottom: 1rem;">
-                    ¡Examen Completado!
+                    Parcial Enviado
                 </h2>
-                <div class="results-score" id="finalScore">0%</div>
-                <div class="results-message" id="resultMessage"></div>
+                <div class="results-message" id="resultMessage">
+                    Sus respuestas han sido registradas. El docente calificará las secciones II y III.
+                </div>
                 
                 <div class="results-details">
                     <div class="result-item">
-                        <div class="result-item-label">Correctas</div>
-                        <div class="result-item-value" style="color: var(--success);" id="finalCorrect">0</div>
+                        <div class="result-item-label">Sección I</div>
+                        <div class="result-item-value" style="color: var(--success); font-size: 1.3rem;" id="finalMCQ">—/15</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-item-label">Incorrectas</div>
-                        <div class="result-item-value" style="color: var(--error);" id="finalIncorrect">0</div>
+                        <div class="result-item-label">Sección II</div>
+                        <div class="result-item-value" style="color: var(--info); font-size: 1.3rem;">Pendiente</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-item-label">Total</div>
-                        <div class="result-item-value" style="color: var(--uvg-green);" id="finalTotal">10</div>
+                        <div class="result-item-label">Sección III</div>
+                        <div class="result-item-value" style="color: var(--info); font-size: 1.3rem;">Pendiente</div>
                     </div>
                     <div class="result-item">
                         <div class="result-item-label">Tiempo</div>
                         <div class="result-item-value" style="color: var(--warning);" id="finalTime">00:00</div>
                     </div>
                 </div>
+
+                <div class="exam-instructions" style="text-align: left; margin-top: 2rem;">
+                    <h3>Resumen de entrega</h3>
+                    <ul id="submissionSummary"></ul>
+                </div>
                 
                 <div class="button-group">
-                    <button class="btn btn-primary" onclick="restartExam()">
-                        <span>🔄 Practicar de Nuevo</span>
+                    <button class="btn btn-secondary" onclick="window.print()">
+                        <span>Imprimir respuestas</span>
                     </button>
                 </div>
             </div>
@@ -1472,42 +1895,106 @@ print(dic.get("edad", 18))`,
             }
         ];
 
-        // Game State
-        let selectedQuestionCount = 10;
+        // Direct Questions — Sección II
+        const directQuestions = [
+            {
+                points: 5,
+                question: "Usando un ciclo, calcule e imprima la tabla de multiplicar del número que ingrese el usuario (del 1 al 10)."
+            },
+            {
+                points: 5,
+                question: "Escriba una función llamada <code>es_par(n)</code> que reciba un número entero y retorne <code>True</code> si es par, o <code>False</code> si es impar. Luego, usando un ciclo <code>for</code>, imprima todos los números pares del 1 al 20."
+            },
+            {
+                points: 5,
+                question: "Escriba un programa que pida al usuario una cadena de texto y cuente cuántas vocales (a, e, i, o, u — mayúsculas o minúsculas) contiene. Imprima el resultado."
+            }
+        ];
+
+        // Code Analysis — Sección III
+        const codeAnalysisQuestions = [
+            {
+                points: 10,
+                expectedOutput: "Debería imprimir la suma de los números del 1 al 5, es decir: 15",
+                code: `suma = 0
+for i in range(1, 6):
+    suma = i
+print(suma)`
+            },
+            {
+                points: 10,
+                expectedOutput: "Debería imprimir 'Hola Ana' dos veces",
+                code: `def saludar(nombre):
+    mensaje = f"Hola {nombre}"
+
+saludar("Ana")
+print(saludar("Ana"))`
+            }
+        ];
+
+        // Exam State
+        const MCQ_COUNT = 15;
+        let currentSection = 1;
         let currentQuestionIndex = 0;
         let userAnswers = [];
-        let correctAnswers = 0;
+        let directAnswers = [];
+        let analysisAnswers = [];
         let timerInterval;
-        let timeRemaining = 30 * 60; // 30 minutes
+        let timeRemaining = 90 * 60;
         let selectedQuestions = [];
-
-        // Select Question Count
-        function selectQuestionCount(count) {
-            selectedQuestionCount = count;
-            document.querySelectorAll('.selector-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            document.querySelector(`[data-count="${count}"]`).classList.add('selected');
-        }
+        let studentInfo = { name: '', id: '', section: '' };
+        let examStartTime = 0;
 
         // Start Exam
         function startExam() {
-            // Shuffle and select questions
+            const name = document.getElementById('studentName').value.trim();
+            const id = document.getElementById('studentId').value.trim();
+            const section = document.getElementById('studentSection').value.trim();
+
+            if (!name || !id || !section) {
+                alert('Por favor complete todos sus datos antes de iniciar el parcial.');
+                return;
+            }
+
+            studentInfo = { name, id, section };
+
             selectedQuestions = questionBank
                 .sort(() => Math.random() - 0.5)
-                .slice(0, selectedQuestionCount);
-            
+                .slice(0, MCQ_COUNT);
+
             currentQuestionIndex = 0;
-            userAnswers = new Array(selectedQuestions.length).fill(null);
-            correctAnswers = 0;
-            timeRemaining = 30 * 60;
-            
+            currentSection = 1;
+            userAnswers = new Array(MCQ_COUNT).fill(null);
+            directAnswers = new Array(directQuestions.length).fill('');
+            analysisAnswers = codeAnalysisQuestions.map(() => ({ explanation: '', correction: '' }));
+            timeRemaining = 90 * 60;
+            examStartTime = Date.now();
+
+            document.getElementById('bannerName').textContent = name;
+            document.getElementById('bannerId').textContent = id;
+            document.getElementById('bannerSection').textContent = section;
+
             document.getElementById('startScreen').classList.add('hidden');
             document.getElementById('examScreen').classList.remove('hidden');
             document.getElementById('resultsScreen').classList.add('hidden');
-            
+
+            renderDirectQuestions();
+            renderCodeAnalysis();
             startTimer();
-            showQuestion();
+            goToSection(1);
+        }
+
+        // Section Navigation
+        function goToSection(section) {
+            currentSection = section;
+
+            document.querySelectorAll('.exam-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`section${section}`).classList.remove('hidden');
+
+            document.querySelectorAll('.section-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-section${section}`).classList.add('active');
+
+            if (section === 1) showQuestion();
         }
 
         // Timer
@@ -1516,7 +2003,6 @@ print(dic.get("edad", 18))`,
             timerInterval = setInterval(() => {
                 timeRemaining--;
                 updateTimerDisplay();
-                
                 if (timeRemaining <= 0) {
                     clearInterval(timerInterval);
                     finishExam();
@@ -1527,77 +2013,53 @@ print(dic.get("edad", 18))`,
         function updateTimerDisplay() {
             const minutes = Math.floor(timeRemaining / 60);
             const seconds = timeRemaining % 60;
-            document.getElementById('timer').textContent = 
+            document.getElementById('timer').textContent =
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // Display Question
+        // Section I — Multiple Choice
         function showQuestion() {
             const question = selectedQuestions[currentQuestionIndex];
             const progress = ((currentQuestionIndex + 1) / selectedQuestions.length * 100).toFixed(0);
-            
-            // Update stats
+            const answered = userAnswers.filter(a => a !== null).length;
+
             document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
             document.getElementById('progress').textContent = progress + '%';
-            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('answeredCount').textContent = answered;
             document.getElementById('progressBar').style.width = progress + '%';
-            
-            // Build question HTML
+
             let html = `
                 <div class="question-header">
                     <div class="question-number">Pregunta ${currentQuestionIndex + 1} de ${selectedQuestions.length}</div>
-                    <div class="question-category">${question.category}</div>
+                    <div class="question-badges">
+                        <span class="question-type-badge type-mcq">Selección múltiple</span>
+                        <div class="question-category">${question.category}</div>
+                    </div>
                 </div>
                 <div class="question-text">${question.question}</div>
             `;
-            
+
             if (question.code) {
                 html += `<div class="code-block"><pre>${escapeHtml(question.code)}</pre></div>`;
             }
-            
+
             html += '<div class="options">';
             question.options.forEach((option, index) => {
                 const selected = userAnswers[currentQuestionIndex] === index ? 'selected' : '';
-                const disabled = userAnswers[currentQuestionIndex] !== null ? 'disabled' : '';
                 html += `
-                    <div class="option ${selected} ${disabled}" onclick="selectOption(${index})">
+                    <div class="option ${selected}" onclick="selectOption(${index})">
                         <div class="option-letter">${String.fromCharCode(65 + index)}</div>
                         <div class="option-text">${option}</div>
                     </div>
                 `;
             });
             html += '</div>';
-            
-            // Show explanation if already answered
-            if (userAnswers[currentQuestionIndex] !== null) {
-                const isCorrect = userAnswers[currentQuestionIndex] === question.correct;
-                html += `
-                    <div class="explanation">
-                        <div class="explanation-title">
-                            ${isCorrect ? '✅ ¡Correcto!' : '❌ Incorrecto'}
-                        </div>
-                        <div class="explanation-content">${question.explanation}</div>
-                    </div>
-                `;
-                
-                // Highlight correct/incorrect
-                setTimeout(() => {
-                    const options = document.querySelectorAll('.option');
-                    options[question.correct].classList.add('correct');
-                    if (!isCorrect) {
-                        options[userAnswers[currentQuestionIndex]].classList.add('incorrect');
-                    }
-                }, 100);
-            }
-            
+
             document.getElementById('questionCard').innerHTML = html;
-            
-            // Update buttons
+
             document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
-            document.getElementById('checkBtn').classList.toggle('hidden', userAnswers[currentQuestionIndex] !== null);
-            document.getElementById('nextBtn').classList.toggle('hidden', userAnswers[currentQuestionIndex] === null);
-            document.getElementById('finishBtn').classList.toggle('hidden', 
-                currentQuestionIndex !== selectedQuestions.length - 1 || userAnswers[currentQuestionIndex] === null);
+            document.getElementById('nextBtn').classList.toggle('hidden', currentQuestionIndex === selectedQuestions.length - 1);
+            document.getElementById('section1NextBtn').classList.toggle('hidden', currentQuestionIndex !== selectedQuestions.length - 1);
         }
 
         function escapeHtml(text) {
@@ -1606,36 +2068,11 @@ print(dic.get("edad", 18))`,
             return div.innerHTML;
         }
 
-        // Select Option
         function selectOption(index) {
-            if (userAnswers[currentQuestionIndex] !== null) return;
-            
-            const options = document.querySelectorAll('.option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            options[index].classList.add('selected');
-        }
-
-        // Check Answer
-        function checkAnswer() {
-            const selectedOption = document.querySelector('.option.selected');
-            if (!selectedOption) {
-                alert('Por favor selecciona una respuesta');
-                return;
-            }
-            
-            const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selectedOption);
-            const question = selectedQuestions[currentQuestionIndex];
-            
-            userAnswers[currentQuestionIndex] = selectedIndex;
-            
-            if (selectedIndex === question.correct) {
-                correctAnswers++;
-            }
-            
+            userAnswers[currentQuestionIndex] = index;
             showQuestion();
         }
 
-        // Navigation
         function previousQuestion() {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
@@ -1650,50 +2087,127 @@ print(dic.get("edad", 18))`,
             }
         }
 
-        // Finish Exam
-        function finishExam() {
-            clearInterval(timerInterval);
-            
-            const score = (correctAnswers / selectedQuestions.length * 100).toFixed(0);
-            const timeUsed = 30 * 60 - timeRemaining;
-            const minutesUsed = Math.floor(timeUsed / 60);
-            const secondsUsed = timeUsed % 60;
-            
-            document.getElementById('examScreen').classList.add('hidden');
-            document.getElementById('resultsScreen').classList.remove('hidden');
-            
-            document.getElementById('finalScore').textContent = score + '%';
-            document.getElementById('finalCorrect').textContent = correctAnswers;
-            document.getElementById('finalIncorrect').textContent = selectedQuestions.length - correctAnswers;
-            document.getElementById('finalTotal').textContent = selectedQuestions.length;
-            document.getElementById('finalTime').textContent = 
-                `${minutesUsed.toString().padStart(2, '0')}:${secondsUsed.toString().padStart(2, '0')}`;
-            
-            // Icon and message based on score
-            let icon = '🎉';
-            let message = '';
-            if (score >= 90) {
-                icon = '🏆';
-                message = '¡Excelente trabajo! Dominas el material.';
-            } else if (score >= 75) {
-                icon = '🎯';
-                message = '¡Muy bien! Estás bien preparado.';
-            } else if (score >= 60) {
-                icon = '📚';
-                message = 'Buen esfuerzo. Repasa los temas difíciles.';
-            } else {
-                icon = '💪';
-                message = 'Sigue estudiando. ¡Tú puedes mejorar!';
-            }
-            
-            document.getElementById('resultIcon').textContent = icon;
-            document.getElementById('resultMessage').textContent = message;
+        // Section II — Direct Questions
+        function renderDirectQuestions() {
+            const container = document.getElementById('directQuestionsContainer');
+            container.innerHTML = directQuestions.map((q, i) => `
+                <div class="open-question">
+                    <div class="open-question-header">
+                        <div class="open-question-meta">
+                            <div class="open-question-number">Pregunta ${i + 1}</div>
+                            <span class="question-type-badge type-direct">Pregunta directa</span>
+                        </div>
+                        <div class="open-question-points">${q.points} pts</div>
+                    </div>
+                    <div class="open-question-text">${q.question}</div>
+                    <label class="answer-label" for="direct-${i}">Su respuesta (código Python)</label>
+                    <textarea class="answer-area" id="direct-${i}" placeholder="# Escriba su código aquí..." oninput="saveDirectAnswer(${i}, this.value)">${escapeHtml(directAnswers[i])}</textarea>
+                </div>
+            `).join('');
         }
 
-        // Restart
-        function restartExam() {
-            document.getElementById('resultsScreen').classList.add('hidden');
-            document.getElementById('startScreen').classList.remove('hidden');
+        function saveDirectAnswer(index, value) {
+            directAnswers[index] = value;
+        }
+
+        // Section III — Code Analysis
+        function renderCodeAnalysis() {
+            const container = document.getElementById('codeAnalysisContainer');
+            container.innerHTML = codeAnalysisQuestions.map((q, i) => `
+                <div class="open-question">
+                    <div class="open-question-header">
+                        <div class="open-question-meta">
+                            <div class="open-question-number">Ejercicio ${i + 1}</div>
+                            <span class="question-type-badge type-analysis">Análisis de código</span>
+                        </div>
+                        <div class="open-question-points">${q.points} pts</div>
+                    </div>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.95rem;">
+                        Salida esperada: ${q.expectedOutput}
+                    </p>
+                    <div class="code-block"><pre>${escapeHtml(q.code)}</pre></div>
+                    <div class="analysis-fields">
+                        <div>
+                            <label class="answer-label" for="analysis-exp-${i}">¿Qué hace el código? ¿Cuál es el error?</label>
+                            <textarea class="answer-area" id="analysis-exp-${i}" placeholder="Explique qué hace el código y por qué la salida no es la esperada..." oninput="saveAnalysisAnswer(${i}, 'explanation', this.value)">${escapeHtml(analysisAnswers[i]?.explanation || '')}</textarea>
+                        </div>
+                        <div>
+                            <label class="answer-label" for="analysis-fix-${i}">Código corregido</label>
+                            <textarea class="answer-area code-fix" id="analysis-fix-${i}" placeholder="# Escriba el código corregido aquí..." oninput="saveAnalysisAnswer(${i}, 'correction', this.value)">${escapeHtml(analysisAnswers[i]?.correction || '')}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveAnalysisAnswer(index, field, value) {
+            if (!analysisAnswers[index]) {
+                analysisAnswers[index] = { explanation: '', correction: '' };
+            }
+            analysisAnswers[index][field] = value;
+        }
+
+        // Submit
+        function confirmSubmit() {
+            const unansweredMCQ = userAnswers.filter(a => a === null).length;
+            const emptyDirect = directAnswers.filter(a => !a.trim()).length;
+            const emptyAnalysis = analysisAnswers.filter(a => !a.explanation.trim() || !a.correction.trim()).length;
+
+            let warning = '';
+            if (unansweredMCQ > 0) warning += `\n• Sección I: ${unansweredMCQ} pregunta(s) sin responder`;
+            if (emptyDirect > 0) warning += `\n• Sección II: ${emptyDirect} pregunta(s) sin responder`;
+            if (emptyAnalysis > 0) warning += `\n• Sección III: ${emptyAnalysis} ejercicio(s) incompleto(s)`;
+
+            const msg = warning
+                ? `Aún tiene respuestas pendientes:${warning}\n\n¿Desea enviar el parcial de todas formas?`
+                : '¿Está seguro de que desea enviar el parcial? No podrá modificar sus respuestas después.';
+
+            if (confirm(msg)) finishExam();
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+
+            let mcqCorrect = 0;
+            selectedQuestions.forEach((q, i) => {
+                if (userAnswers[i] === q.correct) mcqCorrect++;
+            });
+
+            const timeUsed = 90 * 60 - timeRemaining;
+            const minutesUsed = Math.floor(timeUsed / 60);
+            const secondsUsed = timeUsed % 60;
+
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+
+            document.getElementById('finalMCQ').textContent = `${mcqCorrect}/${MCQ_COUNT}`;
+            document.getElementById('finalTime').textContent =
+                `${minutesUsed.toString().padStart(2, '0')}:${secondsUsed.toString().padStart(2, '0')}`;
+
+            const directAnswered = directAnswers.filter(a => a.trim()).length;
+            const analysisComplete = analysisAnswers.filter(a => a.explanation.trim() && a.correction.trim()).length;
+
+            document.getElementById('submissionSummary').innerHTML = `
+                <li><strong>${studentInfo.name}</strong> — Carné ${studentInfo.id}, Sección ${studentInfo.section}</li>
+                <li>Sección I: ${mcqCorrect} de ${MCQ_COUNT} respuestas correctas (calificación automática referencial)</li>
+                <li>Sección II: ${directAnswered} de ${directQuestions.length} preguntas respondidas — calificación manual</li>
+                <li>Sección III: ${analysisComplete} de ${codeAnalysisQuestions.length} ejercicios completos — calificación manual</li>
+                <li>Tiempo utilizado: ${minutesUsed}:${secondsUsed.toString().padStart(2, '0')}</li>
+            `;
+
+            saveSubmission(mcqCorrect);
+        }
+
+        function saveSubmission(mcqCorrect) {
+            const submission = {
+                student: studentInfo,
+                timestamp: new Date().toISOString(),
+                mcq: { answers: userAnswers, correct: mcqCorrect, total: MCQ_COUNT },
+                direct: directAnswers,
+                analysis: analysisAnswers,
+                timeUsed: 90 * 60 - timeRemaining
+            };
+            localStorage.setItem(`parcial-cc2005-${studentInfo.id}`, JSON.stringify(submission));
         }
     </script>
 </body>
