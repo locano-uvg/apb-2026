@@ -3,15 +3,16 @@ const REPO_TREE = (folder) =>
   `${REPO_EJEMPLOS}/tree/main/${encodeURIComponent(folder)}`;
 
 export const presentations = [
+  {},
   {
     id: 13,
-    title: "Practicar",
-    image: "./assets/07-funciones.png",
+    title: "Practica para Parcial",
+    image: "./assets/parcial.png",
     links: {
-      ver: "./practicar.html",
+      ver: "./presentations/repaso-parcial.html",
       ejemplos: null,
     },
-    active: false,
+    active: true,
   },
   {
     id: 12,
@@ -51,7 +52,7 @@ export const presentations = [
     image: "./assets/09-listas.png",
     links: {
       ver: "./presentations/09-listas.html",
-      ejemplos: "./presentations/09-10-ejemplos-listas-diccionarios.htmll",
+      ejemplos: "./presentations/09-10-ejemplos-listas-diccionarios.html",
     },
     active: true,
   },

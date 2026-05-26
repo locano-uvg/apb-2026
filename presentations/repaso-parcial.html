@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Parcial 2 - CC2005 UVG</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+        
+        :root {
+            /* Colores UVG */
+            --uvg-green: #3A7D28;
+            --uvg-green-dark: #2d6120;
+            --uvg-green-light: #4a9d38;
+            --uvg-gray: #333F48;
+            --uvg-gray-light: #4a5661;
+            --uvg-gray-dark: #1a2026;
+            
+            /* Paleta extendida */
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1f2937;
+            --text-primary: #f0f6fc;
+            --text-secondary: #c9d1d9;
+            --text-muted: #8b949e;
+            --border: rgba(58, 125, 40, 0.3);
+            --success: #3fb950;
+            --error: #f85149;
+            --warning: #d29922;
+            --info: #58a6ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(58, 125, 40, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(51, 63, 72, 0.08) 0%, transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+        }
+        
+        .logo-uvg {
+            color: var(--uvg-green);
+        }
+        
+        .logo-text {
+            color: var(--text-primary);
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .course-code {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--uvg-gray);
+            color: var(--uvg-green);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+        
+        /* Card Base */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--uvg-green);
+            box-shadow: 0 8px 24px rgba(58, 125, 40, 0.15);
+        }
+        
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+            padding: 3rem 2rem;
+            animation: scaleIn 0.6s ease;
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .start-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .start-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--uvg-green);
+        }
+        
+        .start-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+        
+        /* Question Count Selector */
+        .question-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2.5rem 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .selector-option {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .selector-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--uvg-green);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .selector-option:hover {
+            border-color: var(--uvg-green);
+            background: rgba(58, 125, 40, 0.05);
+            transform: translateY(-4px);
+        }
+        
+        .selector-option:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .selector-option.selected {
+            border-color: var(--uvg-green);
+            background: rgba(58, 125, 40, 0.15);
+            border-width: 3px;
+        }
+        
+        .selector-option.selected::before {
+            transform: scaleX(1);
+        }
+        
+        .selector-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--uvg-green);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .selector-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+        
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .feature {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            border-color: var(--uvg-green);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(58, 125, 40, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--uvg-green);
+        }
+        
+        .feature-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: slideUp 0.6s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--uvg-green);
+            transform: translateY(-2px);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--uvg-green);
+        }
+        
+        .timer-value {
+            color: var(--warning);
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--uvg-green), var(--uvg-green-light));
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Question Card */
+        .question-card {
+            animation: slideUp 0.6s ease;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .question-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--uvg-green);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .question-category {
+            background: var(--uvg-gray);
+            color: var(--uvg-green);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        
+        .code-block {
+            background: var(--uvg-gray-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'PYTHON';
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* Options */
+        .options {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .option {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--uvg-green);
+            border-radius: 12px 0 0 12px;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: var(--uvg-green);
+            background: rgba(58, 125, 40, 0.05);
+            transform: translateX(4px);
+        }
+        
+        .option:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .option-letter {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .option:hover .option-letter {
+            background: var(--uvg-green);
+            border-color: var(--uvg-green);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .option.selected {
+            border-color: var(--uvg-green);
+            background: rgba(58, 125, 40, 0.1);
+        }
+        
+        .option.selected::before {
+            transform: scaleY(1);
+        }
+        
+        .option.selected .option-letter {
+            background: var(--uvg-green);
+            border-color: var(--uvg-green);
+            color: white;
+        }
+        
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(63, 185, 80, 0.1);
+        }
+        
+        .option.correct::before {
+            background: var(--success);
+        }
+        
+        .option.correct .option-letter {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .option.incorrect {
+            border-color: var(--error);
+            background: rgba(248, 81, 73, 0.1);
+        }
+        
+        .option.incorrect::before {
+            background: var(--error);
+        }
+        
+        .option.incorrect .option-letter {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+        
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .option-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        /* Explanation */
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(58, 125, 40, 0.08);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--uvg-green);
+            border-radius: 12px;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            color: var(--uvg-green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .explanation-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-primary {
+            background: var(--uvg-green);
+            color: white;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary:hover {
+            background: var(--uvg-green-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(58, 125, 40, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--uvg-green);
+            background: rgba(58, 125, 40, 0.05);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Results Screen */
+        .results-card {
+            text-align: center;
+            padding: 3rem;
+            animation: scaleIn 0.8s ease;
+        }
+        
+        .results-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .results-score {
+            font-size: 5rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--uvg-green);
+            margin: 1.5rem 0;
+        }
+        
+        .results-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .result-item {
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        
+        .result-item-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .result-item-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .question-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-score {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-uvg">UVG</span> 
+                <span class="logo-text">PARCIAL 2</span>
+            </div>
+            <div class="subtitle">Simulador de Práctica • Algoritmos y Programación Básica</div>
+            <div class="course-code">CC2005 • Semestre 01-2026</div>
+        </header>
+
+        <!-- Start Screen -->
+        <div id="startScreen" class="card start-screen">
+            <div class="start-icon">🎯</div>
+            <h1 class="start-title">¡Prepárate para el Parcial!</h1>
+            <p class="start-description">
+                Practica con preguntas reales basadas en el material oficial de CC2005. 
+                Elige cuántas preguntas quieres resolver y obtén retroalimentación inmediata.
+            </p>
+            
+            <h3 style="color: var(--uvg-green); margin-bottom: 1rem; font-size: 1.3rem;">
+                ¿Cuántas preguntas quieres practicar?
+            </h3>
+            
+            <div class="question-selector">
+                <div class="selector-option selected" data-count="10" onclick="selectQuestionCount(10)">
+                    <div class="selector-number">10</div>
+                    <div class="selector-label">Preguntas</div>
+                </div>
+                <div class="selector-option" data-count="20" onclick="selectQuestionCount(20)">
+                    <div class="selector-number">20</div>
+                    <div class="selector-label">Preguntas</div>
+                </div>
+                <div class="selector-option" data-count="30" onclick="selectQuestionCount(30)">
+                    <div class="selector-number">30</div>
+                    <div class="selector-label">Preguntas</div>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">Material Oficial</div>
+                    <div class="feature-description">Basado en las presentaciones de repeticiones, funciones, cadenas, listas y diccionarios</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⏱️</div>
+                    <div class="feature-title">Tiempo Real</div>
+                    <div class="feature-description">Simula el tiempo del examen real para prepararte mejor</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💡</div>
+                    <div class="feature-title">Retroalimentación</div>
+                    <div class="feature-description">Explicaciones detalladas para cada respuesta</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Práctica Ilimitada</div>
+                    <div class="feature-description">Reinicia y practica cuantas veces necesites</div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="startExam()">
+                    <span>🚀 Comenzar Práctica</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Exam Screen -->
+        <div id="examScreen" class="hidden">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-label">Pregunta</div>
+                    <div class="stat-value" id="currentQuestion">1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Progreso</div>
+                    <div class="stat-value" id="progress">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Correctas</div>
+                    <div class="stat-value" id="correctCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tiempo</div>
+                    <div class="stat-value timer-value" id="timer">20:00</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="card question-card" id="questionCard">
+                <!-- Question content will be inserted here -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn">
+                    <span>⬅ Anterior</span>
+                </button>
+                <button class="btn btn-primary" onclick="checkAnswer()" id="checkBtn">
+                    <span>✓ Verificar Respuesta</span>
+                </button>
+                <button class="btn btn-primary hidden" onclick="nextQuestion()" id="nextBtn">
+                    <span>Siguiente ➡</span>
+                </button>
+                <button class="btn btn-primary hidden" onclick="finishExam()" id="finishBtn">
+                    <span>🏁 Finalizar Examen</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="hidden">
+            <div class="card results-card">
+                <div class="results-icon" id="resultIcon">🎉</div>
+                <h2 style="color: var(--uvg-green); font-size: 2rem; margin-bottom: 1rem;">
+                    ¡Examen Completado!
+                </h2>
+                <div class="results-score" id="finalScore">0%</div>
+                <div class="results-message" id="resultMessage"></div>
+                
+                <div class="results-details">
+                    <div class="result-item">
+                        <div class="result-item-label">Correctas</div>
+                        <div class="result-item-value" style="color: var(--success);" id="finalCorrect">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Incorrectas</div>
+                        <div class="result-item-value" style="color: var(--error);" id="finalIncorrect">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Total</div>
+                        <div class="result-item-value" style="color: var(--uvg-green);" id="finalTotal">10</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Tiempo</div>
+                        <div class="result-item-value" style="color: var(--warning);" id="finalTime">00:00</div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="restartExam()">
+                        <span>🔄 Practicar de Nuevo</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank - 50+ preguntas organizadas por categoría
+        const questionBank = [
+            // === REPETICIONES (FOR/WHILE) ===
+            {
+                category: "Repeticiones",
+                question: "¿Qué valores imprime este código?",
+                code: `for i in range(5):
+    print(i)`,
+                options: ["0 1 2 3 4", "1 2 3 4 5", "0 1 2 3 4 5", "1 2 3 4"],
+                correct: 0,
+                explanation: "range(5) genera números del 0 al 4 (no incluye el 5). El límite superior nunca se incluye en range()."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Qué imprime este código?",
+                code: `suma = 0
+for i in range(1, 6):
+    suma += i
+print(suma)`,
+                options: ["10", "15", "21", "20"],
+                correct: 1,
+                explanation: "Suma 1+2+3+4+5 = 15. range(1, 6) genera del 1 al 5."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Qué imprime este código?",
+                code: `for i in range(0, 10, 2):
+    print(i, end=' ')`,
+                options: ["0 2 4 6 8", "2 4 6 8 10", "0 2 4 6 8 10", "1 3 5 7 9"],
+                correct: 0,
+                explanation: "range(0, 10, 2) cuenta de 2 en 2, desde 0 hasta 8 (no incluye el 10)."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Cuál es la principal diferencia entre FOR y WHILE?",
+                options: [
+                    "FOR es más rápido que WHILE",
+                    "WHILE solo funciona con números",
+                    "FOR itera sobre secuencias, WHILE repite mientras la condición sea verdadera",
+                    "No hay ninguna diferencia"
+                ],
+                correct: 2,
+                explanation: "FOR itera sobre secuencias conocidas (listas, rangos). WHILE repite mientras una condición booleana sea True."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Qué hace este código?",
+                code: `i = 1
+while i <= 5:
+    print(i)
+    i += 1`,
+                options: [
+                    "Imprime del 1 al 5",
+                    "Imprime del 0 al 4",
+                    "Ciclo infinito",
+                    "Error de sintaxis"
+                ],
+                correct: 0,
+                explanation: "El while imprime 1, 2, 3, 4, 5 y termina cuando i=6 (que no cumple i <= 5)."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Qué produce range(10, 0, -2)?",
+                options: [
+                    "10 8 6 4 2",
+                    "10 9 8 7 6 5 4 3 2 1",
+                    "Rango vacío (no genera nada)",
+                    "Error"
+                ],
+                correct: 0,
+                explanation: "Con paso negativo (-2), cuenta hacia atrás de 2 en 2: 10, 8, 6, 4, 2."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Cuántas veces se ejecuta el print en este código?",
+                code: `for i in range(3):
+    for j in range(2):
+        print(i, j)`,
+                options: ["5", "6", "9", "3"],
+                correct: 1,
+                explanation: "Ciclo externo: 3 iteraciones. Ciclo interno: 2 iteraciones. Total: 3 × 2 = 6 ejecuciones."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Qué error tiene este código?",
+                code: `x = 0
+while x < 5:
+    print(x)`,
+                options: [
+                    "Falta incrementar x (ciclo infinito)",
+                    "while no puede usar <",
+                    "x debe iniciar en 1",
+                    "No tiene error"
+                ],
+                correct: 0,
+                explanation: "x nunca cambia dentro del while, por lo que la condición x < 5 siempre es True → ciclo infinito."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Qué imprime este código?",
+                code: `for letra in "Python":
+    print(letra, end='')`,
+                options: ["Python", "P y t h o n", "6", "Error"],
+                correct: 0,
+                explanation: "El FOR recorre cada carácter del string. end='' evita el salto de línea, imprimiendo 'Python'."
+            },
+            {
+                category: "Repeticiones",
+                question: "¿Cuál es el error más común con acumuladores multiplicativos?",
+                options: [
+                    "Inicializar en 0 en lugar de 1",
+                    "Usar *= en lugar de +=",
+                    "No usar un ciclo for",
+                    "Olvidar el return"
+                ],
+                correct: 0,
+                explanation: "Para multiplicar, el acumulador debe iniciar en 1 (neutro multiplicativo). Si inicia en 0, el resultado siempre será 0."
+            },
+
+            // === FUNCIONES ===
+            {
+                category: "Funciones",
+                question: "¿Qué imprime este código?",
+                code: `def cuadrado(x):
+    return x * x
+
+resultado = cuadrado(5)
+print(resultado)`,
+                options: ["25", "10", "5", "None"],
+                correct: 0,
+                explanation: "La función retorna 5 * 5 = 25, que se guarda en 'resultado' y se imprime."
+            },
+            {
+                category: "Funciones",
+                question: "¿Qué imprime este código?",
+                code: `def saludar(nombre):
+    print(f"Hola {nombre}")
+
+saludar("Ana")`,
+                options: ["Hola Ana", "Hola nombre", "Ana", "None"],
+                correct: 0,
+                explanation: "El parámetro 'nombre' toma el valor 'Ana' y se imprime dentro del f-string."
+            },
+            {
+                category: "Funciones",
+                question: "¿Qué devuelve esta función?",
+                code: `def suma(a, b):
+    resultado = a + b
+
+print(suma(3, 4))`,
+                options: ["7", "None", "Error", "0"],
+                correct: 1,
+                explanation: "La función NO tiene return, por lo que Python retorna None automáticamente."
+            },
+            {
+                category: "Funciones",
+                question: "¿Qué es un parámetro con valor por defecto?",
+                options: [
+                    "Un parámetro que siempre tiene el mismo valor",
+                    "Un valor predeterminado usado cuando no se proporciona el argumento",
+                    "Un parámetro obligatorio",
+                    "Un error de Python"
+                ],
+                correct: 1,
+                explanation: "Los parámetros por defecto tienen un valor que se usa cuando el argumento no es proporcionado al llamar la función."
+            },
+            {
+                category: "Funciones",
+                question: "¿Qué imprime este código?",
+                code: `def potencia(base, exponente=2):
+    return base ** exponente
+
+print(potencia(3))
+print(potencia(2, 3))`,
+                options: ["9 y 8", "9 y 6", "3 y 8", "6 y 8"],
+                correct: 0,
+                explanation: "potencia(3) usa el valor por defecto exponente=2, dando 3²=9. potencia(2,3) da 2³=8."
+            },
+            {
+                category: "Funciones",
+                question: "¿Qué es el scope (alcance) de una variable?",
+                options: [
+                    "El tipo de dato que puede almacenar",
+                    "El nombre de la variable",
+                    "El ámbito donde la variable existe y es accesible",
+                    "La cantidad de memoria que usa"
+                ],
+                correct: 2,
+                explanation: "El scope define dónde una variable existe. Variables locales solo existen dentro de su función."
+            },
+            {
+                category: "Funciones",
+                question: "¿Cuál es el error en este código?",
+                code: `def calcular():
+    valor = 42
+    return valor
+
+calcular()
+print(valor)`,
+                options: [
+                    "NameError: 'valor' no está definida fuera de la función",
+                    "La función no retorna nada",
+                    "Falta llamar calcular()",
+                    "No hay error"
+                ],
+                correct: 0,
+                explanation: "'valor' es una variable local que solo existe dentro de calcular(). No puede accederse desde fuera."
+            },
+            {
+                category: "Funciones",
+                question: "¿Qué hace este código?",
+                code: `def celsius_a_fahrenheit(c):
+    return (c * 9/5) + 32
+
+print(celsius_a_fahrenheit(0))`,
+                options: ["32.0", "0", "273.15", "Error"],
+                correct: 0,
+                explanation: "Convierte 0°C a Fahrenheit: (0 * 9/5) + 32 = 32°F."
+            },
+            {
+                category: "Funciones",
+                question: "¿Cuándo deberías usar return en una función?",
+                options: [
+                    "Siempre, en todas las funciones",
+                    "Cuando quieres devolver un valor para usarlo después",
+                    "Solo con números",
+                    "Nunca, Python lo hace automáticamente"
+                ],
+                correct: 1,
+                explanation: "Usa return cuando necesitas que la función devuelva un valor que se usará en el código. Si solo imprime, no necesitas return."
+            },
+            {
+                category: "Funciones",
+                question: "¿Cuál es mejor práctica para nombrar funciones?",
+                options: [
+                    "f(), g(), h()",
+                    "funcion1(), funcion2()",
+                    "calcular_area(), obtener_promedio()",
+                    "CALCULODETODO()"
+                ],
+                correct: 2,
+                explanation: "Usa nombres descriptivos con snake_case que expliquen claramente qué hace la función."
+            },
+
+            // === CADENAS (STRINGS) ===
+            {
+                category: "Cadenas",
+                question: "¿Qué característica tienen las cadenas en Python?",
+                options: [
+                    "Son mutables",
+                    "Son inmutables",
+                    "Se pueden modificar carácter por carácter",
+                    "Solo pueden contener letras"
+                ],
+                correct: 1,
+                explanation: "Las cadenas son INMUTABLES. No puedes modificar caracteres individuales. Debes crear una nueva cadena."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué imprime este código?",
+                code: `cadena = "Hola Mundo"
+print(len(cadena))`,
+                options: ["10", "11", "9", "Error"],
+                correct: 0,
+                explanation: "len() cuenta todos los caracteres incluyendo el espacio: H-o-l-a- -M-u-n-d-o = 10."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué hace este código?",
+                code: `s = "python"
+print(s.upper())
+print(s)`,
+                options: [
+                    "PYTHON y PYTHON",
+                    "PYTHON y python",
+                    "python y python",
+                    "Error"
+                ],
+                correct: 1,
+                explanation: ".upper() retorna una NUEVA cadena en mayúsculas. La original 's' no cambia porque las cadenas son inmutables."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué imprime este código?",
+                code: `cadena = "banana"
+print(cadena.count("a"))`,
+                options: ["2", "3", "6", "1"],
+                correct: 1,
+                explanation: "Cuenta cuántas veces aparece 'a' en 'banana': b-a-n-a-n-a = 3 veces."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué hace cadena.find('x')?",
+                options: [
+                    "Retorna True si encuentra 'x'",
+                    "Retorna el índice de la primera aparición de 'x', o -1 si no existe",
+                    "Elimina 'x' de la cadena",
+                    "Cuenta cuántas 'x' hay"
+                ],
+                correct: 1,
+                explanation: ".find() retorna el índice (posición) de la primera aparición. Si no encuentra, retorna -1."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué imprime este código?",
+                code: `cadena = "Hola Mundo"
+print(cadena[0])
+print(cadena[-1])`,
+                options: ["H y o", "H y d", "0 y -1", "Error"],
+                correct: 1,
+                explanation: "cadena[0] es el primer carácter 'H'. cadena[-1] es el último carácter 'd'."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué hace este código?",
+                code: `cadena = "Hola Mundo"
+print(cadena[0:4])`,
+                options: ["Hola", "Hol", "HolaMundo", "Mundo"],
+                correct: 0,
+                explanation: "Slicing [0:4] toma desde índice 0 hasta 3 (no incluye 4): H-o-l-a."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Cuál es el error en este código?",
+                code: `cadena = "Hola"
+cadena[0] = "h"`,
+                options: [
+                    "TypeError: las cadenas son inmutables",
+                    "IndexError",
+                    "NameError",
+                    "No hay error"
+                ],
+                correct: 0,
+                explanation: "No puedes modificar caracteres individuales porque las cadenas son inmutables. Debes crear una nueva cadena."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué imprime este código?",
+                code: `cadena = "Hola Mundo"
+nueva = cadena.replace("Mundo", "Python")
+print(nueva)`,
+                options: ["Hola Python", "Hola Mundo", "Python", "Error"],
+                correct: 0,
+                explanation: ".replace() crea una NUEVA cadena reemplazando 'Mundo' por 'Python'."
+            },
+            {
+                category: "Cadenas",
+                question: "¿Qué hace '12345'.isdigit()?",
+                options: ["True", "False", "5", "Error"],
+                correct: 0,
+                explanation: ".isdigit() retorna True porque todos los caracteres son dígitos."
+            },
+
+            // === LISTAS ===
+            {
+                category: "Listas",
+                question: "¿Qué característica tienen las listas en Python?",
+                options: [
+                    "Son inmutables",
+                    "Son mutables (se pueden modificar)",
+                    "Solo pueden contener números",
+                    "No pueden estar vacías"
+                ],
+                correct: 1,
+                explanation: "Las listas son MUTABLES: puedes modificar, agregar y eliminar elementos después de crearlas."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué imprime este código?",
+                code: `lista = [1, 2, 3]
+lista.append(4)
+print(lista)`,
+                options: ["[1, 2, 3, 4]", "[1, 2, 3]", "[4]", "Error"],
+                correct: 0,
+                explanation: ".append() agrega el elemento al FINAL de la lista, modificándola directamente."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué hace este código?",
+                code: `lista = [5, 1, 4, 3]
+lista.sort()
+print(lista)`,
+                options: ["[1, 3, 4, 5]", "[5, 1, 4, 3]", "[5, 4, 3, 1]", "Error"],
+                correct: 0,
+                explanation: ".sort() ordena la lista en orden ASCENDENTE (de menor a mayor) y modifica la lista original."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué imprime este código?",
+                code: `lista = [1, 2, 3, 2, 4]
+lista.remove(2)
+print(lista)`,
+                options: ["[1, 3, 2, 4]", "[1, 3, 4]", "[1, 2, 3, 4]", "Error"],
+                correct: 0,
+                explanation: ".remove() elimina solo la PRIMERA aparición del elemento (en este caso, el primer 2)."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué hace lista.pop()?",
+                options: [
+                    "Elimina el primer elemento",
+                    "Elimina y retorna el último elemento",
+                    "Vacía la lista completamente",
+                    "Ordena la lista"
+                ],
+                correct: 1,
+                explanation: ".pop() elimina el ÚLTIMO elemento de la lista y lo retorna como valor."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué imprime este código?",
+                code: `palabras = "Hola Mundo Python".split(" ")
+print(palabras)`,
+                options: [
+                    "['Hola', 'Mundo', 'Python']",
+                    "'Hola Mundo Python'",
+                    "['H', 'o', 'l', 'a']",
+                    "Error"
+                ],
+                correct: 0,
+                explanation: ".split(' ') divide la cadena en una lista usando el espacio como separador."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué hace este código?",
+                code: `lista = [1, 2, 3]
+lista2 = [4, 5]
+lista.extend(lista2)
+print(lista)`,
+                options: ["[1, 2, 3, 4, 5]", "[[1, 2, 3], [4, 5]]", "[4, 5]", "Error"],
+                correct: 0,
+                explanation: ".extend() agrega todos los elementos de lista2 al final de lista."
+            },
+            {
+                category: "Listas",
+                question: "¿Qué imprime este código?",
+                code: `lista = [2, 2, 3, 4, 5, 6]
+print(lista[0])
+print(lista[-1])`,
+                options: ["2 y 6", "0 y -1", "2 y 5", "Error"],
+                correct: 0,
+                explanation: "lista[0] es el primer elemento (2). lista[-1] es el último elemento (6)."
+            },
+            {
+                category: "Listas",
+                question: "¿Cómo se crea una lista vacía?",
+                options: ["lista = []", "lista = ()", "lista = {}", "lista = ''"],
+                correct: 0,
+                explanation: "Una lista vacía se crea con corchetes vacíos: []"
+            },
+            {
+                category: "Listas",
+                question: "¿Qué imprime este código?",
+                code: `lista = [0] * 4
+print(lista)`,
+                options: ["[0, 0, 0, 0]", "[0]", "0", "Error"],
+                correct: 0,
+                explanation: "El operador * repite la lista: [0] repetido 4 veces = [0, 0, 0, 0]."
+            },
+
+            // === DICCIONARIOS ===
+            {
+                category: "Diccionarios",
+                question: "¿Qué son los diccionarios en Python?",
+                options: [
+                    "Listas ordenadas",
+                    "Estructuras que almacenan pares llave:valor",
+                    "Strings especiales",
+                    "Funciones predefinidas"
+                ],
+                correct: 1,
+                explanation: "Los diccionarios almacenan pares llave:valor, donde cada llave identifica un valor de forma única."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué imprime este código?",
+                code: `dic = {"nombre": "Ana", "edad": 20}
+print(dic["nombre"])`,
+                options: ["Ana", "nombre", "20", "Error"],
+                correct: 0,
+                explanation: "dic['nombre'] accede al valor asociado con la llave 'nombre', que es 'Ana'."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué hace este código?",
+                code: `dic = {"codigo": "cc2005"}
+dic["creditos"] = 6
+print(dic)`,
+                options: [
+                    "{'codigo': 'cc2005', 'creditos': 6}",
+                    "{'codigo': 'cc2005'}",
+                    "Error",
+                    "{'creditos': 6}"
+                ],
+                correct: 0,
+                explanation: "Agregar una nueva llave se hace asignando directamente: dic['creditos'] = 6"
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Cuál es la diferencia entre dic['llave'] y dic.get('llave')?",
+                options: [
+                    "No hay diferencia",
+                    "dic['llave'] lanza error si no existe, .get() retorna None",
+                    ".get() es más lento",
+                    "dic['llave'] es más seguro"
+                ],
+                correct: 1,
+                explanation: "dic['llave'] lanza KeyError si la llave no existe. .get() retorna None sin error."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué hace este código?",
+                code: `dic = {"a": 1, "b": 2}
+del dic["a"]
+print(dic)`,
+                options: ["{'b': 2}", "{'a': 1, 'b': 2}", "Error", "{}"],
+                correct: 0,
+                explanation: "del elimina la llave y su valor del diccionario."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué tipo de dato NO puede ser llave de un diccionario?",
+                options: ["str", "int", "list", "tuple"],
+                correct: 2,
+                explanation: "Las llaves deben ser INMUTABLES. Las listas son mutables, por lo tanto no pueden ser llaves."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué imprime este código?",
+                code: `dic = {"codigo": "cc2005", "creditos": 6}
+print("seccion" in dic)`,
+                options: ["False", "True", "None", "Error"],
+                correct: 0,
+                explanation: "El operador 'in' verifica si una llave existe en el diccionario. 'seccion' no existe, retorna False."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué hace dic.keys()?",
+                options: [
+                    "Retorna todos los valores",
+                    "Retorna todas las llaves",
+                    "Retorna pares llave:valor",
+                    "Cuenta las llaves"
+                ],
+                correct: 1,
+                explanation: ".keys() retorna una vista de todas las llaves del diccionario."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Qué imprime este código?",
+                code: `dic = {"nombre": "Ana"}
+print(dic.get("edad", 18))`,
+                options: ["18", "None", "Error", "Ana"],
+                correct: 0,
+                explanation: ".get('edad', 18) busca 'edad'. Como no existe, retorna el valor por defecto 18."
+            },
+            {
+                category: "Diccionarios",
+                question: "¿Cómo se recorre un diccionario para obtener llaves y valores?",
+                options: [
+                    "for k, v in dic:",
+                    "for k, v in dic.items():",
+                    "for dic[k, v]:",
+                    "for k: v in dic:"
+                ],
+                correct: 1,
+                explanation: ".items() retorna pares (llave, valor) que se pueden desempacar con for k, v in dic.items():"
+            }
+        ];
+
+        // Game State
+        let selectedQuestionCount = 10;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let correctAnswers = 0;
+        let timerInterval;
+        let timeRemaining = 30 * 60; // 30 minutes
+        let selectedQuestions = [];
+
+        // Select Question Count
+        function selectQuestionCount(count) {
+            selectedQuestionCount = count;
+            document.querySelectorAll('.selector-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`[data-count="${count}"]`).classList.add('selected');
+        }
+
+        // Start Exam
+        function startExam() {
+            // Shuffle and select questions
+            selectedQuestions = questionBank
+                .sort(() => Math.random() - 0.5)
+                .slice(0, selectedQuestionCount);
+            
+            currentQuestionIndex = 0;
+            userAnswers = new Array(selectedQuestions.length).fill(null);
+            correctAnswers = 0;
+            timeRemaining = 30 * 60;
+            
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('examScreen').classList.remove('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            
+            startTimer();
+            showQuestion();
+        }
+
+        // Timer
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Display Question
+        function showQuestion() {
+            const question = selectedQuestions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex + 1) / selectedQuestions.length * 100).toFixed(0);
+            
+            // Update stats
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('progress').textContent = progress + '%';
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Build question HTML
+            let html = `
+                <div class="question-header">
+                    <div class="question-number">Pregunta ${currentQuestionIndex + 1} de ${selectedQuestions.length}</div>
+                    <div class="question-category">${question.category}</div>
+                </div>
+                <div class="question-text">${question.question}</div>
+            `;
+            
+            if (question.code) {
+                html += `<div class="code-block"><pre>${escapeHtml(question.code)}</pre></div>`;
+            }
+            
+            html += '<div class="options">';
+            question.options.forEach((option, index) => {
+                const selected = userAnswers[currentQuestionIndex] === index ? 'selected' : '';
+                const disabled = userAnswers[currentQuestionIndex] !== null ? 'disabled' : '';
+                html += `
+                    <div class="option ${selected} ${disabled}" onclick="selectOption(${index})">
+                        <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                        <div class="option-text">${option}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            // Show explanation if already answered
+            if (userAnswers[currentQuestionIndex] !== null) {
+                const isCorrect = userAnswers[currentQuestionIndex] === question.correct;
+                html += `
+                    <div class="explanation">
+                        <div class="explanation-title">
+                            ${isCorrect ? '✅ ¡Correcto!' : '❌ Incorrecto'}
+                        </div>
+                        <div class="explanation-content">${question.explanation}</div>
+                    </div>
+                `;
+                
+                // Highlight correct/incorrect
+                setTimeout(() => {
+                    const options = document.querySelectorAll('.option');
+                    options[question.correct].classList.add('correct');
+                    if (!isCorrect) {
+                        options[userAnswers[currentQuestionIndex]].classList.add('incorrect');
+                    }
+                }, 100);
+            }
+            
+            document.getElementById('questionCard').innerHTML = html;
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('checkBtn').classList.toggle('hidden', userAnswers[currentQuestionIndex] !== null);
+            document.getElementById('nextBtn').classList.toggle('hidden', userAnswers[currentQuestionIndex] === null);
+            document.getElementById('finishBtn').classList.toggle('hidden', 
+                currentQuestionIndex !== selectedQuestions.length - 1 || userAnswers[currentQuestionIndex] === null);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Select Option
+        function selectOption(index) {
+            if (userAnswers[currentQuestionIndex] !== null) return;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[index].classList.add('selected');
+        }
+
+        // Check Answer
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.option.selected');
+            if (!selectedOption) {
+                alert('Por favor selecciona una respuesta');
+                return;
+            }
+            
+            const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selectedOption);
+            const question = selectedQuestions[currentQuestionIndex];
+            
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            if (selectedIndex === question.correct) {
+                correctAnswers++;
+            }
+            
+            showQuestion();
+        }
+
+        // Navigation
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < selectedQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+
+        // Finish Exam
+        function finishExam() {
+            clearInterval(timerInterval);
+            
+            const score = (correctAnswers / selectedQuestions.length * 100).toFixed(0);
+            const timeUsed = 30 * 60 - timeRemaining;
+            const minutesUsed = Math.floor(timeUsed / 60);
+            const secondsUsed = timeUsed % 60;
+            
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            
+            document.getElementById('finalScore').textContent = score + '%';
+            document.getElementById('finalCorrect').textContent = correctAnswers;
+            document.getElementById('finalIncorrect').textContent = selectedQuestions.length - correctAnswers;
+            document.getElementById('finalTotal').textContent = selectedQuestions.length;
+            document.getElementById('finalTime').textContent = 
+                `${minutesUsed.toString().padStart(2, '0')}:${secondsUsed.toString().padStart(2, '0')}`;
+            
+            // Icon and message based on score
+            let icon = '🎉';
+            let message = '';
+            if (score >= 90) {
+                icon = '🏆';
+                message = '¡Excelente trabajo! Dominas el material.';
+            } else if (score >= 75) {
+                icon = '🎯';
+                message = '¡Muy bien! Estás bien preparado.';
+            } else if (score >= 60) {
+                icon = '📚';
+                message = 'Buen esfuerzo. Repasa los temas difíciles.';
+            } else {
+                icon = '💪';
+                message = 'Sigue estudiando. ¡Tú puedes mejorar!';
+            }
+            
+            document.getElementById('resultIcon').textContent = icon;
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        // Restart
+        function restartExam() {
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
