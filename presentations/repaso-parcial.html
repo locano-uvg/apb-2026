@@ -1288,7 +1288,16 @@
                     Parcial Enviado
                 </h2>
                 <div class="results-message" id="resultMessage">
-                    Sus respuestas han sido registradas. El docente calificará las secciones II y III.
+                    Sus respuestas han sido registradas. Se abrió su cliente de correo para enviar el parcial al docente.
+                </div>
+
+                <div class="exam-instructions" style="text-align: left; border-left-color: var(--warning); background: rgba(210, 153, 34, 0.08);">
+                    <h3 style="color: var(--warning);">⚠ Importante — Verificación de envío</h3>
+                    <ul>
+                        <li>Se debió abrir su cliente de correo con un mensaje dirigido a <strong>locano@uvg.edu.gt</strong> que incluye todas sus respuestas.</li>
+                        <li><strong>Revise que el correo se haya enviado correctamente</strong> desde su bandeja de salida.</li>
+                        <li>Si el cliente de correo no se abrió, use los botones de respaldo para reenviar, copiar o descargar sus respuestas.</li>
+                    </ul>
                 </div>
                 
                 <div class="results-details">
@@ -1316,8 +1325,19 @@
                 </div>
                 
                 <div class="button-group">
+                    <button class="btn btn-primary" onclick="sendByEmail()">
+                        <span>📧 Reenviar por correo</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyAnswers()">
+                        <span>📋 Copiar respuestas</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadAnswers()">
+                        <span>💾 Descargar respaldo</span>
+                    </button>
+                </div>
+                <div class="button-group">
                     <button class="btn btn-secondary" onclick="window.print()">
-                        <span>Imprimir respuestas</span>
+                        <span>🖨 Imprimir respuestas</span>
                     </button>
                 </div>
             </div>
@@ -2043,17 +2063,42 @@ print(saludar("Ana"))`
                 html += `<div class="code-block"><pre>${escapeHtml(question.code)}</pre></div>`;
             }
 
+            const userAnswer = userAnswers[currentQuestionIndex];
+            const isAnswered = userAnswer !== null;
+
             html += '<div class="options">';
             question.options.forEach((option, index) => {
-                const selected = userAnswers[currentQuestionIndex] === index ? 'selected' : '';
+                let classes = '';
+                if (isAnswered) {
+                    classes += ' disabled';
+                    if (index === question.correct) {
+                        classes += ' correct';
+                    } else if (index === userAnswer) {
+                        classes += ' incorrect';
+                    }
+                } else if (userAnswer === index) {
+                    classes += ' selected';
+                }
                 html += `
-                    <div class="option ${selected}" onclick="selectOption(${index})">
+                    <div class="option${classes}" onclick="selectOption(${index})">
                         <div class="option-letter">${String.fromCharCode(65 + index)}</div>
                         <div class="option-text">${option}</div>
                     </div>
                 `;
             });
             html += '</div>';
+
+            if (isAnswered) {
+                const isCorrect = userAnswer === question.correct;
+                html += `
+                    <div class="explanation">
+                        <div class="explanation-title">
+                            ${isCorrect ? '✅ ¡Correcto!' : '❌ Incorrecto'}
+                        </div>
+                        <div class="explanation-content">${question.explanation}</div>
+                    </div>
+                `;
+            }
 
             document.getElementById('questionCard').innerHTML = html;
 
@@ -2069,6 +2114,7 @@ print(saludar("Ana"))`
         }
 
         function selectOption(index) {
+            if (userAnswers[currentQuestionIndex] !== null) return;
             userAnswers[currentQuestionIndex] = index;
             showQuestion();
         }
@@ -2165,6 +2211,9 @@ print(saludar("Ana"))`
             if (confirm(msg)) finishExam();
         }
 
+        const PROFESSOR_EMAIL = 'locano@uvg.edu.gt';
+        let lastSubmissionStats = null;
+
         function finishExam() {
             clearInterval(timerInterval);
 
@@ -2187,6 +2236,8 @@ print(saludar("Ana"))`
             const directAnswered = directAnswers.filter(a => a.trim()).length;
             const analysisComplete = analysisAnswers.filter(a => a.explanation.trim() && a.correction.trim()).length;
 
+            lastSubmissionStats = { mcqCorrect, minutesUsed, secondsUsed, directAnswered, analysisComplete };
+
             document.getElementById('submissionSummary').innerHTML = `
                 <li><strong>${studentInfo.name}</strong> — Carné ${studentInfo.id}, Sección ${studentInfo.section}</li>
                 <li>Sección I: ${mcqCorrect} de ${MCQ_COUNT} respuestas correctas (calificación automática referencial)</li>
@@ -2196,6 +2247,102 @@ print(saludar("Ana"))`
             `;
 
             saveSubmission(mcqCorrect);
+            sendByEmail();
+        }
+
+        function buildEmailBody() {
+            const stats = lastSubmissionStats || { mcqCorrect: 0, minutesUsed: 0, secondsUsed: 0, directAnswered: 0, analysisComplete: 0 };
+            const lines = [];
+            lines.push('=== PARCIAL EN LÍNEA — CC2005 ===');
+            lines.push('');
+            lines.push('DATOS DEL ESTUDIANTE');
+            lines.push(`Nombre: ${studentInfo.name}`);
+            lines.push(`Carné: ${studentInfo.id}`);
+            lines.push(`Sección: ${studentInfo.section}`);
+            lines.push(`Fecha de envío: ${new Date().toLocaleString('es-GT')}`);
+            lines.push(`Tiempo utilizado: ${stats.minutesUsed}:${stats.secondsUsed.toString().padStart(2, '0')}`);
+            lines.push('');
+            lines.push('--------------------------------------------------');
+            lines.push(`SECCIÓN I — SELECCIÓN MÚLTIPLE  (${stats.mcqCorrect}/${MCQ_COUNT} correctas)`);
+            lines.push('--------------------------------------------------');
+            selectedQuestions.forEach((q, i) => {
+                const userIdx = userAnswers[i];
+                const userLetter = userIdx !== null ? String.fromCharCode(65 + userIdx) : '—';
+                const correctLetter = String.fromCharCode(65 + q.correct);
+                const mark = userIdx === q.correct ? 'OK' : 'X';
+                lines.push(`${i + 1}. [${mark}] ${q.question}`);
+                if (q.code) {
+                    lines.push('   Código:');
+                    q.code.split('\n').forEach(l => lines.push('     ' + l));
+                }
+                lines.push(`   Respuesta del estudiante: ${userLetter}${userIdx !== null ? ' — ' + q.options[userIdx] : ' (sin responder)'}`);
+                lines.push(`   Respuesta correcta:       ${correctLetter} — ${q.options[q.correct]}`);
+                lines.push('');
+            });
+
+            lines.push('--------------------------------------------------');
+            lines.push('SECCIÓN II — PREGUNTAS DIRECTAS');
+            lines.push('--------------------------------------------------');
+            directQuestions.forEach((q, i) => {
+                lines.push(`Pregunta ${i + 1} (${q.points} pts):`);
+                lines.push(q.question.replace(/<[^>]+>/g, ''));
+                lines.push('');
+                lines.push('Respuesta:');
+                lines.push(directAnswers[i] || '(sin responder)');
+                lines.push('');
+                lines.push('---');
+                lines.push('');
+            });
+
+            lines.push('--------------------------------------------------');
+            lines.push('SECCIÓN III — ANÁLISIS DE CÓDIGO');
+            lines.push('--------------------------------------------------');
+            codeAnalysisQuestions.forEach((q, i) => {
+                lines.push(`Ejercicio ${i + 1} (${q.points} pts):`);
+                lines.push(`Salida esperada: ${q.expectedOutput}`);
+                lines.push('Código original:');
+                q.code.split('\n').forEach(l => lines.push('  ' + l));
+                lines.push('');
+                lines.push('Explicación del estudiante:');
+                lines.push(analysisAnswers[i]?.explanation || '(sin responder)');
+                lines.push('');
+                lines.push('Código corregido:');
+                lines.push(analysisAnswers[i]?.correction || '(sin responder)');
+                lines.push('');
+                lines.push('---');
+                lines.push('');
+            });
+
+            return lines.join('\n');
+        }
+
+        function sendByEmail() {
+            const subject = `Parcial CC2005 — ${studentInfo.name} (${studentInfo.id}) — Sección ${studentInfo.section}`;
+            const body = buildEmailBody();
+            const mailto = `mailto:${PROFESSOR_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailto;
+        }
+
+        function downloadAnswers() {
+            const body = buildEmailBody();
+            const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Parcial_CC2005_${studentInfo.id}_${studentInfo.name.replace(/\s+/g, '_')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyAnswers() {
+            const body = buildEmailBody();
+            navigator.clipboard.writeText(body).then(() => {
+                alert('Respuestas copiadas al portapapeles. Puede pegarlas en su correo si el envío automático no funcionó.');
+            }).catch(() => {
+                alert('No se pudo copiar automáticamente. Use el botón "Descargar respuestas" como respaldo.');
+            });
         }
 
         function saveSubmission(mcqCorrect) {
